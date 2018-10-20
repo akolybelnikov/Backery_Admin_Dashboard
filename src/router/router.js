@@ -26,7 +26,7 @@ function getUser() {
     let persistedStore = JSON.parse(localStorage.getItem('store'))
     if (persistedStore) {
         user = persistedStore.user
-        if (user) {
+        if (user && user.signInUserSession) {
             return user
         }
     }
@@ -35,6 +35,13 @@ function getUser() {
 const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    },
     routes: [
         {
             path: '/',
