@@ -1,0 +1,50 @@
+@charset "utf-8";
+@import '~bulma/sass/utilities/_all';
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import './variables';
+
+// override fonts
+$family-sans-serif: 'Raleway', sans-serif;
+$content-heading-color: $info;
+
+// override colors
+$colors: (
+    'primary': (
+        $primary,
+        $primary-invert
+    ),
+    'success': (
+        $success,
+        $success-invert
+    ),
+    'info': (
+        $info,
+        $info-invert
+    ),
+    'warning': (
+        $warning,
+        $warning-invert
+    ),
+    'danger': (
+        $danger,
+        $danger-invert
+    )
+);
+// Navbar
+$navbar-item-hover-background-color: $success-shadow;
+$navbar-box-shadow-color: $success;
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+// Forms
+$label-color: $info;
+@import '~bulma/sass/base/_all';
+@import '~bulma/sass/elements/form';
+@import '~bulma/sass/elements/content';
+@import '~bulma/sass/elements/button';
+@import '~bulma/sass/elements/container';
+@import '~bulma/sass/layout/section';
+@import '~bulma/sass/components/navbar';
+@import '~bulma/sass/grid/columns';
+@import '~bulma-divider';
