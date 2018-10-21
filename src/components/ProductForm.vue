@@ -1,76 +1,155 @@
 <template>
-    <div class="section">
-      <div class="section is-centered columns">
-        <div class="column is-full-mobile is-two-third-tablet">
-          <form
-            @submit.prevent="checkForm">
-              <div class="field">
-                  <label class="label">Email</label>
-                  <div class="control">
-                      <input 
-                        id="email"
-                        class="input" 
-                        v-model="email"
-                        type="email"
-                        name="email"
-                        maxlength="30"
-                        v-bind:class="{ 'is-danger': emailErrors.length }"/>
-                  </div>
-                  <p v-if="emailErrors.length" class="help is-danger">
-                      <ul>
-                      <li v-for="(error, index) in emailErrors" :key='index'>{{ error }}</li>
-                      </ul>
-                  </p>
-              </div>
-              <div class="field">
-                  <label class="label">Password</label>
-                  <div class="control">
-                      <input 
-                        id="password"
-                        name="password"
-                        class="input"
-                        v-model="password"
-                        type="password"
-                        minlength="8"
-                        maxlength="30"
-                        v-bind:class="{ 'is-danger': passwordErrors.length }"/>
-                  </div>
-                  <p class="help is-danger" v-if="passwordErrors.length">
-                      <ul>
-                      <li v-for="(error, index) in passwordErrors" :key='index'>{{ error }}</li>
-                      </ul>
-                  </p>
-              </div>  
-              <div class="field">
-                <div class="control has-text-centered">
-                    <input class="button is-primary is-outlined" type="submit" value="Submit">
+    <div class="columns is-flex is-centered">
+    <div class="column is-full-mobile is-half-desktop">
+        <form
+        @submit.prevent="checkForm">
+            <div class="field">
+                <div class="control has-text-left">
+                    <input class="button is-primary is-outlined" type="submit" value="Создать продукт">
                 </div>
-                <p class="help is-danger" v-if="loginErrors.length">
-                      <ul>
-                      <li v-for="(error, index) in loginErrors" :key='index'>{{ error }}</li>
-                      </ul>
-                  </p>
-              </div> 
-          </form>    
-        </div>
-        <div class="column is-one-third-tablet is-full-mobile">
+            </div> 
+            <form-generator :schema="schema"
+                            v-model="formData"
+                            :errors="errors"
+                            @input="validateFormField"
+            >               
+            </form-generator>
+        </form>    
+    </div>
+    <div class="column is-half-desktop is-full-mobile">
 
-        </div>
-      </div>
+    </div>
     </div>
 </template>
 
 
 <script>
+import FormGenerator from './form/FormGenerator'
 export default {
     name: 'ProductForm',
-    data: function() {
+    components: { FormGenerator },
+    data() {
         return {
-            email: null,
-            password: null,
-            emailErrors: [],
-            passwordErrors: [],
-            loginErrors: []
+            formData: {
+                productName: '',
+                category: 'Выбери категорию продукта:',
+                weight: '',
+                price: '',
+                content: '',
+                ingridients: '',
+                sorts: ['']
+            },
+            schema: [
+                {
+                    fieldType: 'SelectList',
+                    label: 'Категория продукта',
+                    name: 'category',
+                    multi: false,
+                    options: [
+                        'Выбери категорию продукта:',
+                        'Хлеб и булки',
+                        'Кондитерка',
+                        'На заказ'
+                    ]
+                },
+                {
+                    fieldType: 'TextInput',
+                    placeholder: 'Наименование продукта',
+                    label: 'Наименование продукта',
+                    name: 'productName'
+                },
+                {
+                    fieldType: 'TextInput',
+                    placeholder: 'Вес продукта',
+                    label: 'Вес продукта',
+                    name: 'weight'
+                },
+                {
+                    fieldType: 'NumberInput',
+                    label: 'Цена продукта',
+                    name: 'price',
+                    placeholder: 'Цена продукта в формате: 50.00'
+                },
+                {
+                    fieldType: 'TextArea',
+                    placeholder: 'Описание продукта',
+                    label: 'Описание продукта',
+                    name: 'content'
+                },
+                {
+                    fieldType: 'TextArea',
+                    placeholder: 'Состав продукта',
+                    label: 'Состав продукта',
+                    name: 'ingridients'
+                },
+                {
+                    fieldType: 'SelectList',
+                    label: 'Начинки продукта',
+                    name: 'sorts',
+                    multi: true,
+                    options: [
+                        'йогуртовая',
+                        'вишня в шоколаде',
+                        'воздушно–ореховая',
+                        'медовая',
+                        'птичье молоко',
+                        'мокрый шоколад',
+                        'чизкейк',
+                        'морковная',
+                        'тирамису',
+                        'нежная сливочная',
+                        'клубничный тирамису',
+                        'пралине',
+                        'фруктово-ягодная'
+                    ]
+                }
+            ],
+            errors: {
+                category: [],
+                productName: [],
+                price: []
+            }
+        }
+    },
+    methods: {
+        validateFormField: function(formData, fieldName, value) {
+            console.log(formData, fieldName, value)
+            if (value) {
+                this.errors[fieldName] = []
+            }
+        },
+        checkForm: function() {
+            let priceRegex = new RegExp(/^\d*(\.\d{2,2})$/)
+            for (let field in this.errors) {
+                if (this.errors.hasOwnProperty(field)) {
+                    this.errors[field] = []
+                }
+            }
+            if (
+                !this.formData.category ||
+                this.formData.category === 'Выбери категорию продукта:'
+            ) {
+                this.errors.category.push('Выбери категорию продукта.')
+            }
+            if (!this.formData.productName) {
+                this.errors.productName.push('Введи наименование продукта.')
+            }
+            if (!this.formData.price) {
+                this.errors.price.push('Укажи цену продукта.')
+            }
+            if (this.formData.price && !priceRegex.test(this.formData.price)) {
+                this.errors.price.push('Укажи цену продукта в формате 50.00')
+            }
+            if (
+                !this.errors.category.length &&
+                !this.errors.productName.length &&
+                !this.errors.price.length
+            ) {
+                this.submitPreview(this.formData)
+            }
+        },
+        submitPreview: function(formData) {
+            console.log(formData)
         }
     }
 }
