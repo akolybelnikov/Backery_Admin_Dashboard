@@ -11,9 +11,21 @@
             <form-generator :schema="schema"
                             v-model="formData"
                             :errors="errors"
-                            @input="validateFormField"
+                            @input="onValueChange"
             >               
             </form-generator>
+            <div class="field">
+                <label class="label has-text-left">Начинки</label>
+                <div class="select is-fullwidth is-success is-multiple">
+                    <select v-model="formData.sorts" multiple>
+                        <option v-for="option in sortsOptions"
+                            v-bind:value="option"
+                            :key="option">
+                            {{ option }}
+                        </option>
+                    </select>
+                </div>
+            </div>            
         </form>    
     </div>
     <div class="column is-half-desktop is-full-mobile">
@@ -39,12 +51,26 @@ export default {
                 ingridients: '',
                 sorts: []
             },
+            sortsOptions: [
+                'йогуртовая',
+                'вишня в шоколаде',
+                'воздушно–ореховая',
+                'медовая',
+                'птичье молоко',
+                'мокрый шоколад',
+                'чизкейк',
+                'морковная',
+                'тирамису',
+                'нежная сливочная',
+                'клубничный тирамису',
+                'пралине',
+                'фруктово-ягодная'
+            ],
             schema: [
                 {
                     fieldType: 'SelectList',
                     label: 'Категория продукта',
                     name: 'category',
-                    multi: false,
                     options: [
                         'Выбери категорию продукта:',
                         'Хлеб и булки',
@@ -81,27 +107,6 @@ export default {
                     placeholder: 'Состав продукта',
                     label: 'Состав продукта',
                     name: 'ingridients'
-                },
-                {
-                    fieldType: 'SelectList',
-                    label: 'Начинки продукта',
-                    name: 'sorts',
-                    multi: true,
-                    options: [
-                        'йогуртовая',
-                        'вишня в шоколаде',
-                        'воздушно–ореховая',
-                        'медовая',
-                        'птичье молоко',
-                        'мокрый шоколад',
-                        'чизкейк',
-                        'морковная',
-                        'тирамису',
-                        'нежная сливочная',
-                        'клубничный тирамису',
-                        'пралине',
-                        'фруктово-ягодная'
-                    ]
                 }
             ],
             errors: {
@@ -112,8 +117,7 @@ export default {
         }
     },
     methods: {
-        validateFormField: function(formData, fieldName, value) {
-            console.log(formData, fieldName, value)
+        onValueChange: function(formData, fieldName, value) {
             if (value) {
                 this.errors[fieldName] = []
             }

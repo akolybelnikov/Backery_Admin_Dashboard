@@ -1,10 +1,8 @@
 <template>
   <div class="field">
     <label class="label has-text-left">{{label}}</label>
-      <div class="select is-fullwidth is-success" :class="{ 'is-danger': errors && errors.length, 'is-multiple': multi }">
+      <div class="select is-fullwidth is-success" :class="{ 'is-danger': errors && errors.length }">
         <select 
-              :class="{ 'multi-select': multi }"
-              :multiple="multi"
               :value="value"
               @input="$emit('input', $event.target.value)"
         >
@@ -25,7 +23,7 @@
 <script>
 export default {
     name: 'SelectList',
-    props: ['multi', 'options', 'name', 'label', 'value', 'errors']
+    props: ['options', 'name', 'label', 'value', 'errors']
 }
 </script>
 
