@@ -1,7 +1,7 @@
 <template>
     <div class="container is-fluid">
-        <div class="section columns">
-           <div class="column">
+        <div class="section columns is-multiline is-centered">
+           <div class="column create-card is-one-quarter-fullhd">
                 <div class="card">
                     <div class="card-image">
                         <icon-base 
@@ -45,7 +45,10 @@
                     </div>
                 </div>
            </div>
-            <div class="column">
+            <div class="column is-full form-card">
+                <router-view></router-view>
+            </div>
+            <div class="column edit-card is-one-quarter-fullhd">
                 <div class="card">
                     <div class="card-image">
                         <icon-base 
@@ -90,7 +93,6 @@
                 </div>
             </div>
         </div>
-        <router-view></router-view>
     </div>
 </template>
 
@@ -109,10 +111,13 @@ export default {
 </script>
 
 <style scoped>
-#secure {
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    padding: 20px;
-    margin-top: 10px;
-}
+    .create-card {
+        order: 1;
+    }
+    .edit-card {
+        order: 2;
+    }
+    .form-card {
+        order: 3;
+    }
 </style>

@@ -43,7 +43,7 @@ export default {
     }
     a {
         color: $primary-shadow;
-        &.router-link-exact-active {
+        &.router-link-active {
             color: $primary;
         }
     }
