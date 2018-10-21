@@ -1,11 +1,49 @@
 @charset "utf-8";
 @import '~bulma/sass/utilities/_all';
-@import url('https://fonts.googleapis.com/css?family=Raleway');
 @import './variables';
 
-// override fonts
-$family-sans-serif: 'Raleway', sans-serif;
+@font-face {
+    font-family: 'Raleway';
+    src: url('assets/fonts/Raleway-v4020-Bold.eot');
+    src: url('assets/fonts/Raleway-v4020-Bold.eot?#iefix') format('embedded-opentype'),
+        url('assets/fonts/Raleway-v4020-Bold.woff') format('woff'),
+        url('assets/fonts/Raleway-v4020-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('assets/fonts/Raleway-v4020-SemiBold.eot');
+    src: url('assets/fonts/Raleway-v4020-SemiBold.eot?#iefix')
+            format('embedded-opentype'),
+        url('assets/fonts/Raleway-v4020-SemiBold.woff') format('woff'),
+        url('assets/fonts/Raleway-v4020-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('assets/fonts/Raleway-v4020-Regular.eot');
+    src: url('assets/fonts/Raleway-v4020-Regular.eot?#iefix')
+            format('embedded-opentype'),
+        url('assets/fonts/Raleway-v4020-Regular.woff') format('woff'),
+        url('assets/fonts/Raleway-v4020-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// override assets/fonts
+$family-sans-serif: 'Raleway', Helvetica, Arial, sans-serif;
 $content-heading-color: $info;
+$card-header-color: $info;
+$card-background-color: $success-shadow;
+$card-color: $info;
+$dropdown-item-color: $info;
+$dropdown-item-hover-color: #fff;
+$dropdown-item-hover-background-color: $primary-shadow;
+$dropdown-divider-background-color: $info-shadow;
 
 // override colors
 $colors: (
@@ -46,5 +84,7 @@ $label-color: $info;
 @import '~bulma/sass/elements/container';
 @import '~bulma/sass/layout/section';
 @import '~bulma/sass/components/navbar';
+@import '~bulma/sass/components/card';
+@import '~bulma/sass/components/dropdown';
 @import '~bulma/sass/grid/columns';
 @import '~bulma-divider';

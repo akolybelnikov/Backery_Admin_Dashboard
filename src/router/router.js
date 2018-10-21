@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '../components/Dashboard.vue'
+import ProductForm from '../components/ProductForm.vue'
+import OfferForm from '../components/OfferForm.vue'
+import NewsForm from '../components/NewsForm.vue'
+import CategoryForm from '../components/CategoryForm.vue'
 import { AmplifyEventBus } from 'aws-amplify-vue'
 import * as AmplifyModules from 'aws-amplify'
 import { AmplifyPlugin } from 'aws-amplify-vue'
@@ -49,7 +53,41 @@ const router = new Router({
             component: Dashboard,
             meta: {
                 requiresAuth: true
-            }
+            },
+            children: [
+                {
+                    path: 'create-product',
+                    name: 'ProductForm',
+                    component: ProductForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'create-offer',
+                    name: 'OfferForm',
+                    component: OfferForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'create-news',
+                    name: 'NewsForm',
+                    component: NewsForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'create-category',
+                    name: 'CategoryForm',
+                    component: CategoryForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                }
+            ]
         },
         {
             path: '/products',

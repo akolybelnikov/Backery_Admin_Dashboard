@@ -5,7 +5,7 @@
         </div>
         <div class="navbar-menu is-active">
           <div class="navbar-end">
-            <router-link class="navbar-item" to="/">Dashboard</router-link>
+            <router-link class="navbar-item" to="/">Панель управления</router-link>
             <div class="is-divider-vertical is-primary is-hidden-touch"></div>
             <router-link class="navbar-item" to="/products">Products</router-link>
             <div class="is-divider-vertical is-primary is-hidden-touch"></div>
@@ -42,9 +42,9 @@ export default {
         }
     }
     a {
-        color: $primary;
+        color: $primary-shadow;
         &.router-link-exact-active {
-            color: $success;
+            color: $primary;
         }
     }
     .is-divider-vertical.is-primary {
