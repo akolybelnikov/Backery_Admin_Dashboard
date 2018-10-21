@@ -113,16 +113,16 @@ export default {
 </script>
 
 <style scoped>
-    .create-card {
-        order: 1;
-    }
-    .edit-card {
-        order: 2;
-    }
-    .form-card {
-        order: 3;
-    }
-    .card-image {
-        padding-top: 20px;
-    }
+.create-card {
+    order: 1;
+}
+.edit-card {
+    order: 2;
+}
+.form-card {
+    order: 3;
+}
+.card-image {
+    padding-top: 20px;
+}
 </style>

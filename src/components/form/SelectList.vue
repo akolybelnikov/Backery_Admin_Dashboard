@@ -30,8 +30,8 @@ export default {
 </script>
 
 <style lang="scss">
-.select select, .control {
-  color: #52082d;
+.select select,
+.control {
+    color: #52082d;
 }
 </style>
-

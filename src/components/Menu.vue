@@ -25,8 +25,10 @@ export default {
         }
     },
     watch: {
-        '$route' (to, from) {
-            to.fullPath === '/products' ? this.matched = false : this.matched = true
+        $route(to) {
+            to.fullPath === '/products'
+                ? (this.matched = false)
+                : (this.matched = true)
         }
     },
     methods: {

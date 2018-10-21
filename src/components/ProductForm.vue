@@ -37,7 +37,7 @@ export default {
                 price: '',
                 content: '',
                 ingridients: '',
-                sorts: ['']
+                sorts: []
             },
             schema: [
                 {
