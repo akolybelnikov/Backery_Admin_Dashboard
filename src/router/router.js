@@ -31,6 +31,13 @@ function getUser() {
     if (persistedStore) {
         user = persistedStore.user
         if (user && user.signInUserSession) {
+            if (
+                user.signInUserSession.accessToken.payload.exp <
+                Math.floor(Date.now() / 1000)
+            ) {
+                store.commit('setUser', null)
+                return null
+            }
             return user
         }
     }
@@ -114,9 +121,9 @@ const router = new Router({
     ]
 })
 
-router.beforeResolve(async (to, from, next) => {
+router.beforeResolve((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        user = await getUser()
+        user = getUser()
         if (!user) {
             return next({
                 path: 'auth',
