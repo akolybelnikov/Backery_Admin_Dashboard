@@ -2,7 +2,7 @@
     <div class="container is-fluid">
         <main class="section">
             <div class="columns is-multiline is-centered">
-            <div class="column create-card is-one-quarter-fullhd">
+                <div class="column create-card is-one-quarter-fullhd">
                     <div class="card">
                         <div class="card-image">
                             <icon-base 
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                     </div>
-            </div>
+                </div>
                 <div class="column is-full form-card">
                     <router-view></router-view>
                 </div>
