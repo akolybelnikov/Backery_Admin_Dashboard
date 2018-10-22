@@ -94,7 +94,7 @@ export default {
                     fieldType: 'NumberInput',
                     label: 'Цена продукта',
                     name: 'price',
-                    placeholder: 'Цена продукта в формате: 50.00'
+                    placeholder: 'Цена в формате: 50.00'
                 },
                 {
                     fieldType: 'TextArea',

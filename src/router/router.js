@@ -5,9 +5,8 @@ import ProductForm from '../components/ProductForm.vue'
 import OfferForm from '../components/OfferForm.vue'
 import NewsForm from '../components/NewsForm.vue'
 import CategoryForm from '../components/CategoryForm.vue'
-import { AmplifyEventBus } from 'aws-amplify-vue'
+import { AmplifyEventBus, AmplifyPlugin } from 'aws-amplify-vue'
 import * as AmplifyModules from 'aws-amplify'
-import { AmplifyPlugin } from 'aws-amplify-vue'
 import store from '../store/store'
 import Login from '../components/Login.vue'
 
@@ -27,20 +26,31 @@ AmplifyEventBus.$on('authState', async state => {
 })
 
 function getUser() {
-    let persistedStore = JSON.parse(localStorage.getItem('store'))
-    if (persistedStore) {
-        user = persistedStore.user
-        if (user && user.signInUserSession) {
-            if (
-                user.signInUserSession.accessToken.payload.exp <
-                Math.floor(Date.now() / 1000)
-            ) {
-                store.commit('setUser', null)
-                return null
+    return Vue.prototype.$Amplify.Auth.currentAuthenticatedUser()
+        .then(data => {
+            if (data && data.signInUserSession) {
+                return data
             }
-            return user
-        }
-    }
+        })
+        .catch(() => {
+            store.commit('setUser', null)
+            return null
+        })
+
+    // let persistedStore = JSON.parse(localStorage.getItem('store'))
+    // if (persistedStore) {
+    //    user = persistedStore.user
+    //    if (user && user.signInUserSession) {
+    //        if (
+    //            user.signInUserSession.accessToken.payload.exp <
+    //           Math.floor(Date.now() / 1000)
+    //       ) {
+    //           store.commit('setUser', null)
+    //           return null
+    //       }
+    //        return user
+    //    }
+    // }
 }
 
 const router = new Router({
