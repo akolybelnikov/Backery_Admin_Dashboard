@@ -1,7 +1,7 @@
 <template>
     <div class="container is-fluid">
         <main class="section">
-            <div class="columns is-multiline is-centered">
+            <div class="columns is-multiline">
                 <div class="column create-card is-one-quarter-fullhd">
                     <div class="card">
                         <div class="card-image">

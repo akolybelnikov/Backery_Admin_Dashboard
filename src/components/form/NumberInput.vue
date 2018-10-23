@@ -33,3 +33,10 @@ export default {
     props: ['placeholder', 'label', 'name', 'value', 'hasAddOns', 'errors']
 }
 </script>
+
+<style lang="scss" scoped>
+@import '../../_variables';
+a.button.is-success {
+    color: $primary;
+}
+</style>

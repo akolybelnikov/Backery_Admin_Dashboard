@@ -5,7 +5,7 @@
         <select 
               :value="value"
               @input="$emit('input', $event.target.value)"
-        >
+        ><option disabled>{{ disabled }}</option>
           <option v-for="option in options"
                 :key="option">
             {{ option }}
@@ -23,7 +23,7 @@
 <script>
 export default {
     name: 'SelectList',
-    props: ['options', 'name', 'label', 'value', 'errors']
+    props: ['options', 'disabled', 'name', 'label', 'value', 'errors']
 }
 </script>
 

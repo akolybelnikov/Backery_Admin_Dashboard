@@ -1,13 +1,7 @@
 <template>
     <div class="columns">
-        <div class="column">
-            <form
-            @submit.prevent="checkForm">
-                <div class="field">
-                    <div class="control has-text-left">
-                        <input class="button is-primary is-outlined" type="submit" value="Создать продукт">
-                    </div>
-                </div> 
+        <div class="column is-full-mobile is-half">
+            <form>
                 <form-generator :schema="schema"
                                 v-model="formData"
                                 :errors="errors"
@@ -18,6 +12,7 @@
                     <label class="label has-text-left">Начинки</label>
                     <div class="select is-fullwidth is-success is-multiple">
                         <select v-model="formData.sorts" multiple>
+                            <option disabled>Выбери начинки:</option>
                             <option v-for="option in sortsOptions"
                                 v-bind:value="option"
                                 :key="option">
@@ -25,11 +20,54 @@
                             </option>
                         </select>
                     </div>
-                </div>            
+                </div>
+                <div class="field">
+                        <p class="tags">
+                            <span v-for="sort in formData.sorts" :key="sort" class="tag is-success">{{ sort }}</span>
+                        </p>
+                   </div>            
             </form>    
         </div>
-        <div class="column">
-
+        <div class="column is-full-mobile is-half">
+            <div class="columns is-multiline">
+                <div class="column is-full">
+                    <div class="field">
+                        <div class="file has-name is-success is-outlined is-fullwidth">
+                            <label class="file-label">
+                                <input @change="onFileUpload" class="file-input" type="file" name="attachment">
+                                <span class="file-cta">
+                                    <span class="file-icon">
+                                        <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                        Выбери изображение...
+                                    </span>
+                                </span>
+                                <span class="file-name">
+                                    {{ file && file.name }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-full">
+                    <div class="field">
+                        <figure class="image is-350x350">
+                            <button @click="onPreviewRemove" class="button is-success">
+                                <span class="icon">
+                                <i class="fas fa-times"></i>
+                                </span>
+                            </button>
+                            <img :src="preview" alt="">
+                        </figure>
+                    </div>   
+                    <div class="field">
+                        <div class="control has-text-left">
+                            <button class="button is-primary" @click="checkForm">Посмотреть</button>
+                        </div>
+                    </div>                        
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -49,7 +87,9 @@ export default {
                 price: '',
                 content: '',
                 ingridients: '',
-                sorts: []
+                sorts: [],
+                attachment: '',
+                image: ''
             },
             sortsOptions: [
                 'йогуртовая',
@@ -66,17 +106,15 @@ export default {
                 'пралине',
                 'фруктово-ягодная'
             ],
+            file: null,
+            preview: null,
             schema: [
                 {
                     fieldType: 'SelectList',
                     label: 'Категория продукта',
                     name: 'category',
-                    options: [
-                        'Выбери категорию продукта:',
-                        'Хлеб и булки',
-                        'Кондитерка',
-                        'На заказ'
-                    ]
+                    options: ['Хлеб и булки', 'Кондитерка', 'На заказ'],
+                    disabled: 'Выбери категорию продукта:'
                 },
                 {
                     fieldType: 'TextInput',
@@ -154,11 +192,39 @@ export default {
         },
         submitPreview: function(formData) {
             console.log(formData)
+        },
+        onFileUpload: function(event) {
+            this.file = event.target.files[0]
+            this.preview = URL.createObjectURL(this.file)
+        },
+        onPreviewRemove: function() {
+            this.file = null
+            this.preview = null
         }
     }
 }
 </script>
 
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+@import '../_variables';
+figure {
+    min-height: 350px;
+    background: $success-shadow;
+    position: relative;
+    img {
+        min-height: 350px;
+    }
+    button {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+span.tag,
+span.file-label {
+    color: $primary;
+}
+span.tag {
+    font-weight: 600;
+}
 </style>

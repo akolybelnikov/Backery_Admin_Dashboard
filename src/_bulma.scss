@@ -45,6 +45,7 @@ $dropdown-item-hover-color: #fff;
 $dropdown-item-hover-background-color: $primary-shadow;
 $dropdown-divider-background-color: $info-shadow;
 $label-weight: 600;
+$button-color: $primary;
 
 // override colors
 $colors: (
@@ -83,6 +84,8 @@ $label-color: $info;
 @import '~bulma/sass/elements/content';
 @import '~bulma/sass/elements/button';
 @import '~bulma/sass/elements/container';
+@import '~bulma/sass/elements/image';
+@import '~bulma/sass/elements/tag';
 @import '~bulma/sass/layout/section';
 @import '~bulma/sass/components/navbar';
 @import '~bulma/sass/components/card';
