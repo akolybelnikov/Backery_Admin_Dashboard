@@ -12,7 +12,6 @@
                     <label class="label has-text-left">Начинки</label>
                     <div class="select is-fullwidth is-success is-multiple">
                         <select v-model="formData.sorts" multiple>
-                            <option disabled>Выбери начинки:</option>
                             <option v-for="option in sortsOptions"
                                 v-bind:value="option"
                                 :key="option">
@@ -23,7 +22,7 @@
                 </div>
                 <div class="field">
                         <p class="tags">
-                            <span v-for="sort in formData.sorts" :key="sort" class="tag is-success">{{ sort }}</span>
+                            <span v-if="sort !== ''" v-for="sort in formData.sorts" :key="sort" class="tag is-success">{{ sort }}</span>
                         </p>
                    </div>            
             </form>    
@@ -92,6 +91,7 @@ export default {
                 image: ''
             },
             sortsOptions: [
+                '',
                 'йогуртовая',
                 'вишня в шоколаде',
                 'воздушно–ореховая',
@@ -113,7 +113,20 @@ export default {
                     fieldType: 'SelectList',
                     label: 'Категория продукта',
                     name: 'category',
-                    options: ['Хлеб и булки', 'Кондитерка', 'На заказ'],
+                    options: [
+                        {
+                            label: 'Хлеб и булки',
+                            value: 'bread'
+                        },
+                        {
+                            label: 'Кондитерка',
+                            value: 'cakes'
+                        },
+                        {
+                            label: 'На заказ',
+                            value: 'order'
+                        }
+                    ],
                     disabled: 'Выбери категорию продукта:'
                 },
                 {
@@ -158,6 +171,7 @@ export default {
         onValueChange: function(formData, fieldName, value) {
             if (value) {
                 this.errors[fieldName] = []
+                console.log(value)
             }
         },
         checkForm: function() {
