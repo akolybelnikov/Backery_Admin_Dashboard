@@ -15,7 +15,7 @@ const getProduct = `query GetProduct($productId: String!, $category: String!) {
     }
   }
   `
-const listProducts = `query ListProducts(
+const ListProducts = `query ListProducts(
     $filter: TableProductFilterInput
     $limit: Int
     $nextToken: String
@@ -91,4 +91,4 @@ const deleteProduct = `mutation DeleteProduct($input: DeleteProductInput!) {
     }
   }
   `
-export { listProducts, getProduct, updateProduct, deleteProduct, createProduct }
+export { ListProducts, getProduct, updateProduct, deleteProduct, createProduct }

@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboard from '../components/Dashboard.vue'
-import ProductForm from '../components/ProductForm.vue'
+import Dashboard from '../views/Dashboard.vue'
+import ProductForm from '../products/components/ProductForm.vue'
+import ProductCreated from '../products/components/ProductCreated.vue'
 import OfferForm from '../components/OfferForm.vue'
 import NewsForm from '../components/NewsForm.vue'
 import CategoryForm from '../components/CategoryForm.vue'
 import { AmplifyEventBus, AmplifyPlugin } from 'aws-amplify-vue'
 import * as AmplifyModules from 'aws-amplify'
 import store from '../store/store'
-import Login from '../components/Login.vue'
+import Login from '../views/Login.vue'
 
 Vue.use(Router)
 Vue.use(AmplifyPlugin, AmplifyModules)
@@ -61,6 +62,14 @@ const router = new Router({
                     path: 'create-product',
                     name: 'ProductForm',
                     component: ProductForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'product-created',
+                    name: 'ProductCreated',
+                    component: ProductCreated,
                     meta: {
                         requiresAuth: true
                     }

@@ -4,6 +4,9 @@ import router from './router/router'
 import store from './store/store'
 import './registerServiceWorker'
 import Amplify from 'aws-amplify'
+import UUID from 'vue-uuid'
+
+Vue.use(UUID)
 
 Amplify.configure({
     Auth: {

@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import IconBase from './IconBase.vue'
-import IconCreate from './icons/IconCreate.vue'
-import IconEdit from './icons/IconEdit.vue'
+import IconBase from '../components/IconBase.vue'
+import IconCreate from '../components/icons/IconCreate.vue'
+import IconEdit from '../components/icons/IconEdit.vue'
 export default {
     name: 'Dashboard',
     components: {

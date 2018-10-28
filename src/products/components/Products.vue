@@ -1,80 +1,66 @@
 <template>
-    <div><p>products</p></div>
+    <div><p v-show="products">products: {{ products }}</p></div>
 </template>
 
 <script>
-// import Vue from 'vue'
-import store from '../../store/store'
-
 // import getProduct from './persist/graphqlActions'
-// import listProducts from './persist/graphqlActions'
+import { ListProducts } from '../graphql'
 // import createProduct from './persist/graphqlActions'
 // import updateProduct from './persist/graphqlActions'
 // import deleteProduct from './persist/graphqlActions'
 
 export default {
-    name: 'Produts',
+    name: 'Products',
     data() {
         return {
+            filter: 'cakes',
+            limit: 150,
+            nt: null,
             products: [],
-            filter: 'all',
-            limit: 1000,
             logger: {},
             actions: {
                 // create: createProduct,
-                list: listProducts
+                list: ListProducts
                 // update: updateProduct,
                 // delete: deleteProduct
             }
         }
     },
-    created() {
-        this.logger = new this.$Amplify.Logger('PRODUCTS_component')
-        this.list()
-    },
     computed: {
-        userId: function() {
-            return store.state.userId
+        productsByCategory() {
+            return this.$store.state.products[this.filter]
         }
     },
+    created() {
+        this.logger = new this.$Amplify.Logger('PRODUCTS_component')
+        this.products = this.productsByCategory
+        this.list()
+    },
     methods: {
-        list() {
-            this.$Amplify.API.graphql(
-                this.$Amplify.graphqlOperation(listProducts)
-            )
-                .then(res => {
-                    this.products = res.data.listProducts.items
+        async list() {
+            if (!this.products || !this.products.length) {
+                try {
+                    const response = await this.$Amplify.API.graphql(
+                        this.$Amplify.graphqlOperation(this.actions.list, {
+                            filter: { category: { eq: this.filter } },
+                            limit: this.limit
+                        })
+                    )
+                    this.products = response.data.listProducts.items
+                    this.nt = response.data.listProducts.nextToken
+                    this.$store.commit({
+                        type: 'setProducts',
+                        category: this.filter,
+                        items: response.data.listProducts.items
+                    })
                     this.logger.info(`Products successfully listed: `)
-                })
-                .catch(e => {
-                    this.logger.error(`Error listing products: `, e)
-                })
+                } catch (err) {
+                    this.logger.error(`Error listing products: `, err)
+                }
+            } else {
+                this.logger.info(this.products)
+            }
         }
     }
 }
-
-const listProducts = `query ListProducts(
-    $filter: TableProductFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        productId
-        category
-        attachment
-        image
-        weight
-        price
-        sorts
-        upvotes
-        comments
-        productName
-        content
-        ingridients
-      }
-      nextToken
-    }
-  }
-  `
 </script>

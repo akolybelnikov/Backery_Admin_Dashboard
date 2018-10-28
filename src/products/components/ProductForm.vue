@@ -19,12 +19,7 @@
                             </option>
                         </select>
                     </div>
-                </div>
-                <div class="field">
-                        <p class="tags">
-                            <span v-if="sort !== ''" v-for="sort in formData.sorts" :key="sort" class="tag is-success">{{ sort }}</span>
-                        </p>
-                   </div>            
+                </div>           
             </form>    
         </div>
         <div class="column is-full-mobile is-half">
@@ -48,38 +43,62 @@
                             </label>
                         </div>
                     </div>
+                    <div v-if="notification" class="notification is-danger">
+                        <button @click="notification=false" class="delete is-large"></button>
+                        Выбери изображение размером меньше 5 Мб.
+                    </div>
                 </div>
                 <div class="column is-full">
                     <div class="field">
-                        <figure class="image is-350x350">
-                            <button @click="onPreviewRemove" class="button is-success">
-                                <span class="icon">
-                                <i class="fas fa-times"></i>
-                                </span>
-                            </button>
-                            <img :src="preview" alt="">
-                        </figure>
+                        <product-preview
+                            :title="formData.productName"
+                            :description="formData.content"
+                            :ingridients="formData.ingridients"
+                            :weight="formData.weight"
+                            :price="formData.price"
+                            :sorts="formData.sorts"
+                            :src="src"
+                            @click="onImageRemove"
+                        ></product-preview>
                     </div>   
                     <div class="field">
-                        <div class="control has-text-left">
-                            <button class="button is-primary" @click="checkForm">Посмотреть</button>
+                        <div class="control">
+                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать в онлайн-магазине</button>
                         </div>
+                    </div>
+                    <div class="filed">
+                        <div class="control">
+                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
+                        </div>    
                     </div>                        
                 </div>
             </div>
         </div>
+        <div class="modal" :class="{'is-active': loading}">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <p class="has-text-success">Создание продукта может занять некоторое время ...</p><br><br>
+                <span class="icon has-text-success">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                </span>
+            </div>
+            </div>
     </div>
 </template>
 
 
 <script>
-import FormGenerator from './form/FormGenerator'
+import FormGenerator from '../../components/form/FormGenerator'
+import ProductPreview from './ProductPreview'
+import { s3Upload } from '../../helpers/aws'
+
 export default {
     name: 'ProductForm',
-    components: { FormGenerator },
+    components: { FormGenerator, ProductPreview },
     data() {
         return {
             formData: {
+                productId: '',
                 productName: '',
                 category: 'Выбери категорию продукта:',
                 weight: '',
@@ -88,7 +107,8 @@ export default {
                 ingridients: '',
                 sorts: [],
                 attachment: '',
-                image: ''
+                image: '',
+                active: false
             },
             sortsOptions: [
                 '',
@@ -107,7 +127,7 @@ export default {
                 'фруктово-ягодная'
             ],
             file: null,
-            preview: null,
+            src: null,
             schema: [
                 {
                     fieldType: 'SelectList',
@@ -164,17 +184,30 @@ export default {
                 category: [],
                 productName: [],
                 price: []
-            }
+            },
+            createdProduct: null,
+            notification: false
         }
     },
+    computed: {
+        getCreatedProduct() {
+            return this.$store.getters.getCreatedProduct
+        },
+        loading() {
+            return this.$store.state.loading
+        }
+    },
+    created() {
+        this.formData = { ...this.formData, ...this.getCreatedProduct }
+    },
     methods: {
-        onValueChange: function(formData, fieldName, value) {
+        onValueChange: function(fieldName, value) {
             if (value) {
                 this.errors[fieldName] = []
-                console.log(value)
             }
+            this.$store.commit('setCreatedProduct', this.formData)
         },
-        checkForm: function() {
+        checkForm: function(action) {
             let priceRegex = new RegExp(/^\d*(\.\d{2,2})$/)
             for (let field in this.errors) {
                 if (this.errors.hasOwnProperty(field)) {
@@ -190,9 +223,6 @@ export default {
             if (!this.formData.productName) {
                 this.errors.productName.push('Введи наименование продукта.')
             }
-            if (!this.formData.price) {
-                this.errors.price.push('Укажи цену продукта.')
-            }
             if (this.formData.price && !priceRegex.test(this.formData.price)) {
                 this.errors.price.push('Укажи цену продукта в формате 50.00')
             }
@@ -201,44 +231,56 @@ export default {
                 !this.errors.productName.length &&
                 !this.errors.price.length
             ) {
-                this.submitPreview(this.formData)
+                action === 'publish'
+                    ? (this.formData.active = true)
+                    : (this.formData.active = false)
+                this.createProduct()
             }
         },
-        submitPreview: function(formData) {
-            console.log(formData)
-        },
         onFileUpload: function(event) {
+            if (this.notification) this.notification = false
             this.file = event.target.files[0]
-            this.preview = URL.createObjectURL(this.file)
+            if (this.file.size > 5000000) {
+                this.notification = true
+            } else {
+                this.src = URL.createObjectURL(this.file)
+            }
         },
-        onPreviewRemove: function() {
+        onImageRemove: function() {
             this.file = null
-            this.preview = null
+            this.src = null
+        },
+        createProduct: async function() {
+            this.formData.productId = this.$uuid.v4()
+            this.formData.image = `${this.formData.productId}-${this.file.name}`
+            //this.$store.commit('setLoading', true)
+            try {
+                const attachment = this.file
+                    ? await s3Upload(this.file, this.formData.image)
+                    : null
+                console.log(attachment)
+            } catch (err) {
+                this.$store.commit('setLoading', false)
+                console.log(err)
+            }
+            // this.$store.commit('setCreatedProduct', null)
+            // setTimeout(() => {
+            // this.$router.push({
+            // name: 'ProductCreated',
+            // params: { isCreated: true }
+            // })
+            // }, 5000)
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../_variables';
-figure {
-    min-height: 350px;
-    background: $success-shadow;
-    position: relative;
-    img {
-        min-height: 350px;
-    }
-    button {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
+@import '../../_variables';
+i {
+    font-size: 3rem;
 }
-span.tag,
 span.file-label {
     color: $primary;
-}
-span.tag {
-    font-weight: 600;
 }
 </style>

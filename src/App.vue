@@ -12,7 +12,7 @@ import { mapState } from 'vuex'
 
 Vue.component('v-menu', Menu)
 
-// window.LOG_LEVEL = 'DEBUG'
+window.LOG_LEVEL = 'DEBUG'
 
 export default {
     name: 'app',

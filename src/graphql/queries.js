@@ -1,7 +1,7 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getProduct = `query GetProduct($productId: String!, $category: String!) {
+const getProduct = `query GetProduct($productId: String!, $category: String!) {
   getProduct(productId: $productId, category: $category) {
     productId
     category
@@ -18,8 +18,8 @@ export const getProduct = `query GetProduct($productId: String!, $category: Stri
     active
   }
 }
-`;
-export const listProducts = `query ListProducts(
+`
+const listProducts = `query ListProducts(
   $filter: TableProductFilterInput
   $limit: Int
   $nextToken: String
@@ -43,4 +43,6 @@ export const listProducts = `query ListProducts(
     nextToken
   }
 }
-`;
+`
+
+export { getProduct, listProducts }

@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+// import { products } from './products.module'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        user: null
+        user: null,
+        products: {},
+        createdProduct: null,
+        loading: false
     },
     mutations: {
         setUser(state, user) {
@@ -20,12 +25,25 @@ const store = new Vuex.Store({
                     )
                 )
             }
+        },
+        setProducts(state, payload) {
+            state.products[payload.category] = payload.items
+        },
+        setCreatedProduct(state, product) {
+            state.createdProduct = product
+        },
+        setLoading(state, loading) {
+            state.loading = loading
         }
     },
     getters: {
-        getUser: state => {
-            return state.user
-        }
+        getUser: state => state.user,
+        getProductsByCategory: state => category => {
+            return state.products.filter(
+                product => product.category === category
+            )
+        },
+        getCreatedProduct: state => state.createdProduct
     }
 })
 

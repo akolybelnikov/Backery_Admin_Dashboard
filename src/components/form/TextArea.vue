@@ -11,7 +11,7 @@
            :class="{ 'is-danger': errors && errors.length }"
            >
         </textarea>
-        <span class="help is-fullwidth has-text-right is-primary">{{value.length}} / 256</span>
+        <span class="help is-fullwidth has-text-right is-primary">{{value && value.length}} / 256</span>
     </div>
     <p v-if="errors && errors.length" class="help is-danger has-text-left">
         <ul>
