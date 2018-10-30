@@ -91,6 +91,7 @@
 import FormGenerator from '../../components/form/FormGenerator'
 import ProductPreview from './ProductPreview'
 import { s3Upload } from '../../helpers/aws'
+import { CreateProduct } from '../graphql'
 
 export default {
     name: 'ProductForm',
@@ -186,7 +187,10 @@ export default {
                 price: []
             },
             createdProduct: null,
-            notification: false
+            notification: false,
+            mutations: {
+                create: CreateProduct
+            }
         }
     },
     computed: {
@@ -198,6 +202,7 @@ export default {
         }
     },
     created() {
+        this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
         this.formData = { ...this.formData, ...this.getCreatedProduct }
     },
     methods: {
@@ -231,9 +236,9 @@ export default {
                 !this.errors.productName.length &&
                 !this.errors.price.length
             ) {
-                action === 'publish'
-                    ? (this.formData.active = true)
-                    : (this.formData.active = false)
+                if (action === 'publish') {
+                    (this.formData.active = true)
+                }
                 this.createProduct()
             }
         },
@@ -253,23 +258,51 @@ export default {
         createProduct: async function() {
             this.formData.productId = this.$uuid.v4()
             this.formData.image = `${this.formData.productId}-${this.file.name}`
-            //this.$store.commit('setLoading', true)
+            this.$store.commit('setLoading', true)
             try {
-                const attachment = this.file
+                const key = this.file
                     ? await s3Upload(this.file, this.formData.image)
                     : null
-                console.log(attachment)
+                this.formData.attachment = `https://vsebulochki-images.s3.eu-central-1.amazonaws.com/public/${key}`
+                this.pushProductToDB()
             } catch (err) {
                 this.$store.commit('setLoading', false)
-                console.log(err)
             }
-            // this.$store.commit('setCreatedProduct', null)
-            // setTimeout(() => {
-            // this.$router.push({
-            // name: 'ProductCreated',
-            // params: { isCreated: true }
-            // })
-            // }, 5000)
+        },
+        pushProductToDB: async function() {
+            try {
+                let newProduct = {}
+                for (let key in this.formData) {
+                    if (this.formData.hasOwnProperty(key)) {
+                        if (
+                            this.formData[key] &&
+                            this.formData[key] !== undefined &&
+                            this.formData[key] !== ''
+                        ) {
+                            newProduct[key] = this.formData[key]
+                        }
+                    }
+                }
+                const result = await this.$Amplify.API.graphql(
+                    this.$Amplify.graphqlOperation(this.mutations.create, {
+                        input: newProduct
+                    })
+                )
+                if (result) {
+                    this.$store.commit('setCreatedProduct', null)
+                    this.file = null
+                    this.src = null
+                    this.logger.info(`product posted: `, result)
+                    this.$router.push({
+                        name: 'ProductCreated',
+                        params: { createdProduct: result.data.createProduct }
+                    })
+                    this.$store.commit('setLoading', false)
+                }
+            } catch (err) {
+                this.logger.error(`error occured:  `, err)
+                this.$store.commit('setLoading', false)
+            }
         }
     }
 }

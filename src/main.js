@@ -18,7 +18,8 @@ Amplify.configure({
     },
     Storage: {
         bucket: process.env.VUE_APP_S3_AWS_BUCKET_NAME,
-        region: process.env.VUE_APP_S3_AWS_PROJECT_REGION
+        region: process.env.VUE_APP_S3_AWS_PROJECT_REGION,
+        identityPoolId: process.env.VUE_APP_S3_AWS_IDENTITY_POOL_ID
     },
     API: {
         aws_appsync_graphqlEndpoint:

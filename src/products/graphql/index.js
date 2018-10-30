@@ -1,4 +1,4 @@
-const getProduct = `query GetProduct($productId: String!, $category: String!) {
+const GetProduct = `query GetProduct($productId: String!, $category: String!) {
     getProduct(productId: $productId, category: $category) {
       productId
       category
@@ -40,7 +40,7 @@ const ListProducts = `query ListProducts(
   }
   `
 
-const createProduct = `mutation CreateProduct($input: CreateProductInput!) {
+const CreateProduct = `mutation CreateProduct($input: CreateProductInput!) {
     createProduct(input: $input) {
       productId
       category
@@ -54,10 +54,11 @@ const createProduct = `mutation CreateProduct($input: CreateProductInput!) {
       productName
       content
       ingridients
+      active
     }
   }
   `
-const updateProduct = `mutation UpdateProduct($input: UpdateProductInput!) {
+const UpdateProduct = `mutation UpdateProduct($input: UpdateProductInput!) {
     updateProduct(input: $input) {
       productId
       category
@@ -71,24 +72,15 @@ const updateProduct = `mutation UpdateProduct($input: UpdateProductInput!) {
       productName
       content
       ingridients
+      active
     }
   }
   `
-const deleteProduct = `mutation DeleteProduct($input: DeleteProductInput!) {
+const DeleteProduct = `mutation DeleteProduct($input: DeleteProductInput!) {
     deleteProduct(input: $input) {
       productId
       category
-      attachment
-      image
-      weight
-      price
-      sorts
-      upvotes
-      comments
-      productName
-      content
-      ingridients
     }
   }
   `
-export { ListProducts, getProduct, updateProduct, deleteProduct, createProduct }
+export { ListProducts, GetProduct, UpdateProduct, DeleteProduct, CreateProduct }
