@@ -237,7 +237,7 @@ export default {
                 !this.errors.price.length
             ) {
                 if (action === 'publish') {
-                    (this.formData.active = true)
+                    this.formData.active = true
                 }
                 this.createProduct()
             }

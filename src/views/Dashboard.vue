@@ -8,6 +8,7 @@
                             <icon-base 
                                 width="100"
                                 height="100"
+                                viewBox="0 0 150 150"
                                 fill="#52082D"
                                 icon-name="create">
                                 <icon-create />
@@ -55,6 +56,7 @@
                             <icon-base 
                                 width="100"
                                 height="100"
+                                viewBox="0 0 150 150"
                                 fill="#52082d"
                                 icon-name="edit">
                                     <icon-edit />

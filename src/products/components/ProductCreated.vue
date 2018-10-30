@@ -2,19 +2,24 @@
     <div v-if="createdProduct" class="card">
         <div class="card-image">
             <icon-base 
-                width="300"
-                height="300"
+                width="200"
+                height="200"
+                viewBox="0 0 100 100"
                 fill="#52082D"
                 icon-name="cake">
                 <icon-cake />
             </icon-base>
         </div>
         <div class="card-content">
-            Продукт создан и сохранён в базе данных со статусом:
-            <p v-if="createdProduct.status" class="has-text-danger">active</p>
-            <p v-else class="has-text-danger">inactive</p>
-            Если статус продукта active, продукт опубликован в онлайн магазине.
-            В противном случае продукт сохранён в базе данных для дальнейших действий. 
+            <p>Продукт создан и сохранён в базе данных со статусом:</p>
+            <div v-if="createdProduct.active" class="content">
+                <p style="text-transform: uppercase" class="has-text-danger">active</p>
+                <p class="has-text-weight-bold">Продукт опубликован в онлайн-магазине.</p>
+            </div>
+            <div v-else class="content">
+                <p style="text-transform: uppercase" class="has-text-danger">inactive</p>
+                <p class="has-text-weight-bold">Продукт не опубликован в онлайн-магазине.</p>
+            </div>
         </div>
     </div>
     <div v-else>
@@ -23,6 +28,7 @@
                 <icon-base 
                     width="300"
                     height="300"
+                    viewBox="0 0 100 100"
                     fill="#52082D"
                     icon-name="cake">
                     <icon-cake />
@@ -55,7 +61,6 @@ export default {
     methods: {
         isCreated() {
             if (this.$route.params.createdProduct) this.createdProduct = this.$route.params.createdProduct
-            console.log(this.$route.params)
         }
     }
 }
