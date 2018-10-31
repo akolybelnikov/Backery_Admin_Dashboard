@@ -7,8 +7,6 @@
           <div class="navbar-end">
             <router-link class="navbar-item" :class="{ 'router-link-exact-active': matched}" to="/">Панель управления</router-link>
             <div class="is-divider-vertical is-primary is-hidden-touch"></div>
-            <router-link class="navbar-item" to="/products">Products</router-link>
-            <div class="is-divider-vertical is-primary is-hidden-touch"></div>
             <amplify-sign-out class="navbar-item" v-if="user"></amplify-sign-out>
           </div>
         </div>
@@ -52,7 +50,7 @@ export default {
     }
     a {
         color: $primary-shadow;
-        &.router-link-exact-active {
+        &.router-link-active {
             color: $primary;
         }
     }

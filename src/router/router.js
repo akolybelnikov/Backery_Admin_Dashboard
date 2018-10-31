@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import ProductForm from '../products/components/ProductForm.vue'
 import ProductCreated from '../products/components/ProductCreated.vue'
+import Products from '../products/components/Products.vue'
+import ProductsCategory from '../products/components/ProductsCategory.vue'
 import OfferForm from '../components/OfferForm.vue'
 import NewsForm from '../components/NewsForm.vue'
 import CategoryForm from '../components/CategoryForm.vue'
@@ -97,30 +99,41 @@ const router = new Router({
                     meta: {
                         requiresAuth: true
                     }
+                },
+                {
+                    path: 'products-list',
+                    name: 'ProductsList',
+                    component: Products,
+                    meta: {
+                        requiresAuth: true
+                    },
+                    children: [
+                        {
+                            path: ':category',
+                            name: 'ProductsCategory',
+                            component: ProductsCategory,
+                            meta: {
+                                requiresAuth: true
+                            }
+                        }
+                    ]
                 }
             ]
         },
-        {
-            path: '/products',
-            name: 'Products',
-            component: () =>
-                import(/* webpackChunkName: "products" */
-                '../products/components/Products.vue'),
-            meta: {
-                requiresAuth: true
-            }
-        },
+        // {
+        //     path: '/products',
+        //     name: 'Products',
+        //     component: () =>
+        //         import(/* webpackChunkName: "products" */
+        //         '../products/components/Products.vue'),
+        //     meta: {
+        //         requiresAuth: true
+        //     }
+        // },
         {
             path: '/auth',
             name: 'Login',
             component: Login
-        },
-        {
-            path: '/helloworld',
-            name: 'HelloWorld',
-            component: () =>
-                import(/* webpackChunkName: "dashboard" */
-                '../components/HelloWorld.vue')
         }
     ]
 })

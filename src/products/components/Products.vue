@@ -1,66 +1,37 @@
 <template>
-    <div><p v-show="products">products: {{ products }}</p></div>
+    <div>
+        <nav class="panel">
+            <p class="panel-heading">
+                продукты
+            </p>
+            <div class="panel-block">
+                <p class="control has-icons-left">
+                    <input class="input is-medium" type="text" placeholder="поиск">
+                    <span class="icon is-large is-left">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </span>
+                </p>
+            </div>
+            <p class="panel-tabs">
+                <router-link v-for="category in categories" :key="category" :to="{name: 'ProductsCategory', params: {category: category}}">
+                    <h4>{{ category }}</h4>
+                </router-link>
+            </p>
+            <router-view></router-view>
+        </nav>
+    </div>
 </template>
 
 <script>
-// import getProduct from './persist/graphqlActions'
-import { ListProducts } from '../graphql'
-// import createProduct from './persist/graphqlActions'
-// import updateProduct from './persist/graphqlActions'
-// import deleteProduct from './persist/graphqlActions'
-
 export default {
     name: 'Products',
     data() {
         return {
-            filter: 'cakes',
-            limit: 150,
-            nt: null,
-            products: [],
-            logger: {},
-            actions: {
-                // create: createProduct,
-                list: ListProducts
-                // update: updateProduct,
-                // delete: deleteProduct
-            }
-        }
-    },
-    computed: {
-        productsByCategory() {
-            return this.$store.state.products[this.filter]
+            categories: ['bread', 'cakes', 'order']
         }
     },
     created() {
         this.logger = new this.$Amplify.Logger('PRODUCTS_component')
-        this.products = this.productsByCategory
-        this.list()
-    },
-    methods: {
-        async list() {
-            if (!this.products || !this.products.length) {
-                try {
-                    const response = await this.$Amplify.API.graphql(
-                        this.$Amplify.graphqlOperation(this.actions.list, {
-                            filter: { category: { eq: this.filter } },
-                            limit: this.limit
-                        })
-                    )
-                    this.products = response.data.listProducts.items
-                    this.nt = response.data.listProducts.nextToken
-                    this.$store.commit({
-                        type: 'setProducts',
-                        category: this.filter,
-                        items: response.data.listProducts.items
-                    })
-                    this.logger.info(`Products successfully listed: `)
-                } catch (err) {
-                    this.logger.error(`Error listing products: `, err)
-                }
-            } else {
-                this.logger.info(this.products)
-            }
-        }
     }
 }
 </script>

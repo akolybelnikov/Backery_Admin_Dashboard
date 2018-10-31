@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                                     <div class="dropdown-content">
-                                        <router-link to="#" class="dropdown-item">
+                                        <router-link to="products-list/bread" class="dropdown-item">
                                             <h4>Продукт</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
