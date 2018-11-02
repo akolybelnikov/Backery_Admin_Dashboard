@@ -26,19 +26,19 @@
                                 </div>
                                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                                     <div class="dropdown-content">
-                                        <router-link to="create-product" class="dropdown-item">
+                                        <router-link to="/create-product" class="dropdown-item">
                                             <h4>Продукт</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="create-offer" class="dropdown-item">
+                                        <router-link to="/create-offer" class="dropdown-item">
                                             <h4>Спецпредложение</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="create-news" class="dropdown-item">
+                                        <router-link to="/create-news" class="dropdown-item">
                                             <h4>Новость</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="create-category" class="dropdown-item">
+                                        <router-link to="/create-category" class="dropdown-item">
                                             <h4>Категорию</h4>
                                         </router-link>
                                     </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                                     <div class="dropdown-content">
-                                        <router-link to="products-list/bread" class="dropdown-item">
+                                        <router-link to="/products-list/bread" class="dropdown-item">
                                             <h4>Продукт</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
