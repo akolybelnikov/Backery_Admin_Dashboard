@@ -5,8 +5,11 @@ import store from './store/store'
 import './registerServiceWorker'
 import Amplify from 'aws-amplify'
 import UUID from 'vue-uuid'
+import Table from 'buefy/dist/components/table'
 
 Vue.use(UUID)
+Vue.use(Table)
+Vue.use(require('vue-moment'))
 
 Amplify.configure({
     Auth: {

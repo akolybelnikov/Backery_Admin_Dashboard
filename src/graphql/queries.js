@@ -16,6 +16,9 @@ const getProduct = `query GetProduct($productId: String!, $category: String!) {
     content
     ingridients
     active
+    createdAt
+    updatedAt
+    sort
   }
 }
 `
@@ -39,6 +42,9 @@ const listProducts = `query ListProducts(
       content
       ingridients
       active
+      createdAt
+      updatedAt
+      sort
     }
     nextToken
   }

@@ -12,6 +12,9 @@ const GetProduct = `query GetProduct($productId: String!, $category: String!) {
       productName
       content
       ingridients
+      createdAt
+      updatedAt
+      sort
     }
   }
   `
@@ -34,6 +37,9 @@ const ListProducts = `query ListProducts(
         productName
         content
         ingridients
+        createdAt
+        updatedAt
+        sort
       }
       nextToken
     }
@@ -55,6 +61,7 @@ const CreateProduct = `mutation CreateProduct($input: CreateProductInput!) {
       content
       ingridients
       active
+      createdAt
     }
   }
   `
@@ -73,6 +80,8 @@ const UpdateProduct = `mutation UpdateProduct($input: UpdateProductInput!) {
       content
       ingridients
       active
+      updatedAt
+      sort
     }
   }
   `

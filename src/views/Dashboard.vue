@@ -47,9 +47,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="column is-full form-card">
-                    <router-view></router-view>
-                </div>
                 <div class="column edit-card is-one-quarter-fullhd">
                     <div class="card">
                         <div class="card-image">
@@ -95,6 +92,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="column is-full form-card">
+                    <router-view></router-view>
+                </div>
             </div>
         </main>
     </div>
@@ -115,15 +115,6 @@ export default {
 </script>
 
 <style scoped>
-.create-card {
-    order: 1;
-}
-.edit-card {
-    order: 2;
-}
-.form-card {
-    order: 3;
-}
 .card-image {
     padding-top: 20px;
 }

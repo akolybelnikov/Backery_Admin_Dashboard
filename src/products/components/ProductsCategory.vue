@@ -1,13 +1,63 @@
 <template>
     <div>
-        <a v-if="products.length" v-for="product in products" :key="product.productId" class="panel-block">
+        <!-- <a v-if="products.length" v-for="product in products" :key="product.productId" class="panel-block">
             {{ product.productName}}
-        </a>
+        </a> -->
+        <b-table
+            :data="products"
+            :paginated="isPaginated"
+            :per-page="perPage"
+            :current-page.sync="currentPage"
+            :pagination-simple="isPaginationSimple"
+            :default-sort-direction="defaultSortDirection"
+            default-sort="productName"
+            detailed
+        >
+            <template slot-scope="props">
+                <b-table-column field="productName" label="Название" sortable>
+                    {{ props.row.productName }}
+                </b-table-column>
+                <b-table-column field="createdAt" label="Дата создания" sortable centered>
+                    <spn class="tag is-success">{{ Number(props.row.createdAt) | moment("DD.MM.YYYY") }}</spn>
+                </b-table-column>
+                <b-table-column field="updatedAt" label="Дата обновления" sortable centered>
+                    <span class="tag is-success" v-if="props.row.updatedAt">{{ Number(props.row.updatedAt) | moment("DD.MM.YYYY") }}</span>
+                </b-table-column>
+            </template>
+
+            <template slot="detail" slot-scope="props">
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-64x64">
+                            <img src="../../assets/logo.png">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>{{ props.row.content }}</p>
+                        </div>
+                    </div>
+                    <div class="media-right">
+                        <p><strong>{{ props.row.weight }}</strong></p>
+                        <p><strong>{{ props.row.price }}</strong></p>
+                        <br>
+                        <router-link class="button is-primary" :to="{name: 'UpdateProduct', params: {id: props.row.productId}}">
+                            <span class="icon">
+                            <i class="mdi mdi-chevron-right"></i>
+                            </span>
+                        </router-link>
+                    </div>
+                </article>
+            </template>
+
+        </b-table>
     </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import { ListProducts } from '../graphql'
+
 export default {
     name: 'ProductsCategory',
     watch: {
@@ -26,7 +76,12 @@ export default {
             actions: {
                 list: ListProducts
             },
-            category: null
+            category: null,
+            isPaginated: true,
+            isPaginationSimple: false,
+            defaultSortDirection: 'desc',
+            currentPage: 1,
+            perPage: 10
         }
     },
     computed: {

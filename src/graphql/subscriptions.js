@@ -16,6 +16,7 @@ export const onCreateProduct = `subscription OnCreateProduct($productId: String,
     content
     ingridients
     active
+    createdAt
   }
 }
 `;
@@ -34,24 +35,13 @@ export const onUpdateProduct = `subscription OnUpdateProduct($productId: String,
     content
     ingridients
     active
+    updatedAt
   }
 }
 `;
 export const onDeleteProduct = `subscription OnDeleteProduct($productId: String) {
   onDeleteProduct(productId: $productId) {
     productId
-    category
-    attachment
-    image
-    weight
-    price
-    sorts
-    upvotes
-    comments
-    productName
-    content
-    ingridients
-    active
   }
 }
 `;

@@ -2,23 +2,25 @@
     <div>
         <nav class="panel">
             <p class="panel-heading">
-                продукты
+                Изменить или удалить продукт
             </p>
             <div class="panel-block">
-                <p class="control has-icons-left">
-                    <input class="input is-medium" type="text" placeholder="поиск">
-                    <span class="icon is-large is-left">
-                        <i class="fas fa-search" aria-hidden="true"></i>
-                    </span>
-                </p>
+                <div class="field">
+                    <p class="control has-icons-left">
+                        <input class="input is-medium" type="text" placeholder="поиск">
+                        <span class="icon is-left has-text-primary">
+                            <i class="mdi mdi-magnify mdi-24px" aria-hidden="true"></i>
+                        </span>
+                    </p>
+                </div>
             </div>
-            <p class="panel-tabs">
-                <router-link v-for="category in categories" :key="category" :to="{name: 'ProductsCategory', params: {category: category}}">
-                    <h4>{{ category }}</h4>
+            <p class="panel-tabs is-size-4">
+                <router-link v-for="category in categories" :key="category.value" :to="{name: 'ProductsCategory', params: {category: category.value}}">
+                    {{ category.label }}
                 </router-link>
             </p>
-            <router-view></router-view>
         </nav>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -27,7 +29,20 @@ export default {
     name: 'Products',
     data() {
         return {
-            categories: ['bread', 'cakes', 'order']
+            categories: [
+                {
+                    value: 'bread',
+                    label: 'Хлеб'
+                },
+                {
+                    value: 'cakes',
+                    label: 'Кондитерка'
+                },
+                {
+                    value: 'order',
+                    label: 'На заказ'
+                }
+            ]
         }
     },
     created() {
@@ -35,3 +50,13 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+@import '../../_variables';
+a {
+    color: $primary-shadow;
+    &.router-link-active {
+        color: $primary;
+    }
+}
+</style>

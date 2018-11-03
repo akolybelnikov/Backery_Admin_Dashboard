@@ -44,13 +44,6 @@ function getUser() {
 const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return { x: 0, y: 0 }
-        }
-    },
     routes: [
         {
             path: '/',
@@ -96,6 +89,14 @@ const router = new Router({
                     path: 'create-category',
                     name: 'CategoryForm',
                     component: CategoryForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'update-product/:id',
+                    name: 'UpdateProduct',
+                    component: ProductForm,
                     meta: {
                         requiresAuth: true
                     }
