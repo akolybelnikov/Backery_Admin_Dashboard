@@ -8,9 +8,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         user: null,
-        products: {},
-        createdProduct: null,
-        loading: false
+        products: {}
     },
     mutations: {
         setUser(state, user) {
@@ -28,12 +26,6 @@ const store = new Vuex.Store({
         },
         setProducts(state, payload) {
             state.products[payload.category] = payload.items
-        },
-        setCreatedProduct(state, product) {
-            state.createdProduct = product
-        },
-        setLoading(state, loading) {
-            state.loading = loading
         }
     },
     getters: {
@@ -42,8 +34,7 @@ const store = new Vuex.Store({
             return state.products.filter(
                 product => product.category === category
             )
-        },
-        getCreatedProduct: state => state.createdProduct
+        }
     }
 })
 

@@ -6,3 +6,10 @@ export async function s3Upload(file, imageName) {
     })
     return stored.key
 }
+
+export async function s3Delete(imageName) {
+    const deleted = await Vue.prototype.$Amplify.Storage.remove(imageName, {
+        level: 'public'
+    })
+    return deleted
+}

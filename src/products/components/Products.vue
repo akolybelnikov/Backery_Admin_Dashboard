@@ -14,7 +14,7 @@
                     </p>
                 </div>
             </div>
-            <p class="panel-tabs is-size-4">
+            <p class="panel-tabs is-size-4-tablet">
                 <router-link v-for="category in categories" :key="category.value" :to="{name: 'ProductsCategory', params: {category: category.value}}">
                     {{ category.label }}
                 </router-link>

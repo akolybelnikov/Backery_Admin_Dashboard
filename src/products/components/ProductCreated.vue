@@ -1,5 +1,5 @@
 <template>
-    <div v-if="createdProduct" class="card">
+    <div v-if="currentProduct" class="card">
         <div class="card-image">
             <icon-base 
                 width="200"
@@ -11,8 +11,8 @@
             </icon-base>
         </div>
         <div class="card-content">
-            <p>Продукт создан и сохранён в базе данных со статусом:</p>
-            <div v-if="createdProduct.active" class="content">
+            <p>Продукт сохранён в базе данных со статусом:</p>
+            <div v-if="currentProduct.status === 'active'" class="content">
                 <p style="text-transform: uppercase" class="has-text-danger">active</p>
                 <p class="has-text-weight-bold">Продукт опубликован в онлайн-магазине.</p>
             </div>
@@ -34,8 +34,9 @@
                     <icon-cake />
                 </icon-base>
             </div>
-            <div class="card-content">
-                Вначале создай продукт.
+            <div class="card-footer">
+                <p v-if="deleted" class="card-footer-item">Продукт удалён из базы данных.</p>
+                <p v-else class="card-footer-item">Создай, измени или удали продукт.</p>
             </div>
         </div>
     </div>
@@ -52,7 +53,8 @@ export default {
     },
     data() {
         return {
-            createdProduct: null
+            currentProduct: null,
+            deleted: false
         }
     },
     created() {
@@ -60,7 +62,8 @@ export default {
     },
     methods: {
         isCreated() {
-            if (this.$route.params.createdProduct) this.createdProduct = this.$route.params.createdProduct
+            if (this.$route.params.currentProduct) this.currentProduct = this.$route.params.currentProduct
+            if (this.$route.params.deleted) this.deleted = true
         }
     }
 }

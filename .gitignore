@@ -26,3 +26,4 @@ amplify
 aws-exports.js
 config.js
 .graphqlconfig.yaml
+products.json

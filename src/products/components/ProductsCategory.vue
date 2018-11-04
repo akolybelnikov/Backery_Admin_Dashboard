@@ -18,7 +18,7 @@
                     {{ props.row.productName }}
                 </b-table-column>
                 <b-table-column field="createdAt" label="Дата создания" sortable centered>
-                    <spn class="tag is-success">{{ Number(props.row.createdAt) | moment("DD.MM.YYYY") }}</spn>
+                    <span class="tag is-success">{{ Number(props.row.createdAt) | moment("DD.MM.YYYY") }}</span>
                 </b-table-column>
                 <b-table-column field="updatedAt" label="Дата обновления" sortable centered>
                     <span class="tag is-success" v-if="props.row.updatedAt">{{ Number(props.row.updatedAt) | moment("DD.MM.YYYY") }}</span>
@@ -41,7 +41,7 @@
                         <p><strong>{{ props.row.weight }}</strong></p>
                         <p><strong>{{ props.row.price }}</strong></p>
                         <br>
-                        <router-link class="button is-primary" :to="{name: 'UpdateProduct', params: {id: props.row.productId}}">
+                        <router-link class="button is-primary" :to="{name: 'UpdateProduct', params: {id: props.row.productId, category: props.row.category}}">
                             <span class="icon">
                             <i class="mdi mdi-chevron-right"></i>
                             </span>
@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { ListProducts } from '../graphql'
 
 export default {
@@ -105,7 +104,8 @@ export default {
                     const response = await this.$Amplify.API.graphql(
                         this.$Amplify.graphqlOperation(this.actions.list, {
                             filter: { category: { eq: this.category } },
-                            limit: this.limit
+                            limit: this.limit,
+                            nextToken: this.nt
                         })
                     )
                     this.products = response.data.listProducts.items

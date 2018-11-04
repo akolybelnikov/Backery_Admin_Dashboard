@@ -61,23 +61,38 @@
                             @click="onImageRemove"
                         ></product-preview>
                     </div>   
-                    <div class="field">
+                    <div v-if="currentRoute !== 'UpdateProduct'" class="field">
                         <div class="control">
                             <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать в онлайн-магазине</button>
                         </div>
                     </div>
-                    <div class="filed">
+                    <div v-if="currentRoute !== 'UpdateProduct'" class="field">
                         <div class="control">
                             <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
                         </div>    
-                    </div>                        
+                    </div>
+                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
+                        <div class="control">
+                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Сохранить и активировать</button>
+                        </div>
+                    </div>
+                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
+                        <div class="control">
+                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Деактивировать</button>
+                        </div>    
+                    </div> 
+                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
+                        <div class="control">
+                            <button class="button is-info is-medium is-fullwidth" @click="deleteProduct()">Удалить из базы данных</button>
+                        </div>    
+                    </div>                         
                 </div>
             </div>
         </div>
         <div class="modal" :class="{'is-active': loading}">
             <div class="modal-background"></div>
             <div class="modal-content">
-                <p class="has-text-success">Создание продукта может занять некоторое время ...</p><br><br>
+                <p class="has-text-success">... это может занять некоторое время ...</p><br><br>
                 <span class="icon has-text-success">
                     <i class="fas fa-spinner fa-pulse"></i>
                 </span>
@@ -90,8 +105,13 @@
 <script>
 import FormGenerator from '../../components/form/FormGenerator'
 import ProductPreview from './ProductPreview'
-import { s3Upload } from '../../helpers/aws'
-import { CreateProduct } from '../graphql'
+import { s3Upload, s3Delete } from '../../helpers/aws'
+import {
+    CreateProduct,
+    GetProduct,
+    UpdateProduct,
+    DeleteProduct
+} from '../graphql'
 
 export default {
     name: 'ProductForm',
@@ -109,7 +129,9 @@ export default {
                 sorts: [],
                 attachment: '',
                 image: '',
-                active: false
+                status: '',
+                createdAt: '',
+                updatedAt: ''
             },
             sortsOptions: [
                 '',
@@ -186,31 +208,85 @@ export default {
                 productName: [],
                 price: []
             },
-            createdProduct: null,
             notification: false,
+            currentProduct: null,
             mutations: {
-                create: CreateProduct
-            }
+                create: CreateProduct,
+                update: UpdateProduct,
+                delete: DeleteProduct
+            },
+            actions: {
+                get: GetProduct
+            },
+            error: false,
+            loading: false
         }
     },
     computed: {
-        getCreatedProduct() {
-            return this.$store.getters.getCreatedProduct
-        },
-        loading() {
-            return this.$store.state.loading
+        currentRoute() {
+            return this.$route.name
         }
     },
     created() {
-        this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
-        this.formData = { ...this.formData, ...this.getCreatedProduct }
+        // this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
+        if (this.$route.name === 'UpdateProduct') {
+            this.fetchProduct()
+        } else if (this.$route.name === 'ProductForm') {
+            this.error = this.currentProduct = null
+            this.formData = {
+                productId: '',
+                productName: '',
+                category: 'Выбери категорию продукта:',
+                weight: '',
+                price: '',
+                content: '',
+                ingridients: '',
+                sorts: [],
+                attachment: '',
+                image: '',
+                status: '',
+                createdAt: '',
+                updatedAt: ''
+            }
+        }
     },
     methods: {
+        fetchProduct: async function() {
+            this.error = this.currentProduct = null
+            try {
+                const result = await this.$Amplify.API.graphql(
+                    this.$Amplify.graphqlOperation(this.actions.get, {
+                        productId: this.$route.params.id,
+                        category: this.$route.params.category
+                    })
+                )
+                this.setData(result.data.getProduct)
+            } catch (err) {
+                this.error = true
+            }
+        },
+        setData: function(productData) {
+            for (let key in productData) {
+                if (productData.hasOwnProperty(key)) {
+                    if (
+                        productData[key] &&
+                        productData[key] !== undefined &&
+                        productData[key] !== ''
+                    ) {
+                        this.formData[key] = productData[key]
+                    }
+                }
+            }
+            if (this.formData.image) {
+                this.src = `${
+                    process.env.VUE_APP_IMAGE_HANDLER_URL
+                }/450x450/public/${productData.image}`
+            }
+        },
         onValueChange: function(fieldName, value) {
             if (value) {
                 this.errors[fieldName] = []
             }
-            this.$store.commit('setCreatedProduct', this.formData)
         },
         checkForm: function(action) {
             let priceRegex = new RegExp(/^\d*(\.\d{2,2})$/)
@@ -237,9 +313,13 @@ export default {
                 !this.errors.price.length
             ) {
                 if (action === 'publish') {
-                    this.formData.active = true
+                    this.formData.status = 'active'
+                } else {
+                    this.formData.status = 'inactive'
                 }
-                this.createProduct()
+                this.currentRoute === 'UpdateProduct'
+                    ? this.updateProduct()
+                    : this.createProduct()
             }
         },
         onFileUpload: function(event) {
@@ -255,53 +335,141 @@ export default {
             this.file = null
             this.src = null
         },
-        createProduct: async function() {
-            this.formData.productId = this.$uuid.v4()
+        uploadImageToS3: async function() {
             this.formData.image = `${this.formData.productId}-${this.file.name}`
-            this.$store.commit('setLoading', true)
             try {
-                const key = this.file
-                    ? await s3Upload(this.file, this.formData.image)
-                    : null
-                this.formData.attachment = `https://vsebulochki-images.s3.eu-central-1.amazonaws.com/public/${key}`
-                this.pushProductToDB()
+                const key = await s3Upload(this.file, this.formData.image)
+                this.formData.attachment = `${
+                    process.env.VUE_APP_UPLOAD_URL
+                }/${key}`
             } catch (err) {
-                this.$store.commit('setLoading', false)
+                this.loading = false
             }
+        },
+        createProduct: async function() {
+            this.loading = true
+            this.formData.createdAt = Date.now()
+            this.formData.productId = this.$uuid.v4()
+            if (this.file) {
+                await this.uploadImageToS3()
+                await this.pushProductToDB()
+            } else {
+                await this.pushProductToDB()
+            }
+        },
+        makeProduct: function(productData) {
+            let product = {}
+            for (let key in productData) {
+                if (productData.hasOwnProperty(key)) {
+                    if (
+                        productData[key] &&
+                        productData[key] !== undefined &&
+                        productData[key] !== ''
+                    ) {
+                        product[key] = productData[key]
+                    }
+                }
+            }
+            this.currentProduct = product
+            return product
         },
         pushProductToDB: async function() {
             try {
-                let newProduct = {}
-                for (let key in this.formData) {
-                    if (this.formData.hasOwnProperty(key)) {
-                        if (
-                            this.formData[key] &&
-                            this.formData[key] !== undefined &&
-                            this.formData[key] !== ''
-                        ) {
-                            newProduct[key] = this.formData[key]
-                        }
-                    }
-                }
-                const result = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.mutations.create, {
-                        input: newProduct
+                const product = this.makeProduct(this.formData)
+                const result =
+                    this.currentRoute === 'ProductForm'
+                        ? await this.$Amplify.API.graphql(
+                              this.$Amplify.graphqlOperation(
+                                  this.mutations.create,
+                                  {
+                                      input: product
+                                  }
+                              )
+                          )
+                        : await this.$Amplify.API.graphql(
+                              this.$Amplify.graphqlOperation(
+                                  this.mutations.update,
+                                  {
+                                      input: product
+                                  }
+                              )
+                          )
+                if (result.data.createProduct || result.data.updateProduct) {
+                    this.currentProduct = null
+                    this.$store.commit({
+                        type: 'setProducts',
+                        category:
+                            result.data.createProduct.category ||
+                            result.data.updateProduct.category,
+                        items: []
                     })
-                )
-                if (result) {
-                    this.$store.commit('setCreatedProduct', null)
-                    this.file = null
-                    this.src = null
-                    this.logger.info(`product posted: `, result)
+                    if (this.file) this.file = null
+                    if (this.src) this.src = null
                     this.$router.push({
                         name: 'ProductCreated',
-                        params: { createdProduct: result.data.createProduct }
+                        params: {
+                            currentProduct:
+                                result.data.createProduct ||
+                                result.data.updateProduct
+                        }
                     })
-                    this.$store.commit('setLoading', false)
+                    this.loading = false
                 }
             } catch (err) {
-                this.logger.error(`error occured:  `, err)
-                this.$store.commit('setLoading', false)
+                this.error = err.toString()
+                this.loading = false
+            }
+        },
+        deleteProduct: async function() {
+            this.loading = true
+            try {
+                if (this.formData.image) {
+                    await s3Delete(this.formData.image)
+                }
+                const result = await this.$Amplify.API.graphql(
+                    this.$Amplify.graphqlOperation(this.mutations.delete, {
+                        input: {
+                            productId: this.formData.productId,
+                            category: this.formData.category
+                        }
+                    })
+                )
+                if (result.data.deleteProduct) {
+                    this.currentProduct = null
+                    this.$store.commit({
+                        type: 'setProducts',
+                        category: result.data.deleteProduct.category,
+                        items: []
+                    })
+                    if (this.file) this.file = null
+                    if (this.src) this.src = null
+                    this.$router.push({
+                        name: 'ProductCreated',
+                        params: {
+                            deleted: true
+                        }
+                    })
+                    this.loading = false
+                }
+            } catch (err) {
+                this.error = true
+                this.loading = false
+            }
+        },
+        updateProduct: async function() {
+            this.loading = true
+            this.formData.updatedAt = Date.now()
+            try {
+                if (this.file) {
+                    await s3Delete(this.formData.image)
+                    await this.uploadImageToS3()
+                    await this.pushProductToDB()
+                } else {
+                    await this.pushProductToDB()
+                }
+            } catch (err) {
+                this.error = true
+                this.loading = false
             }
         }
     }

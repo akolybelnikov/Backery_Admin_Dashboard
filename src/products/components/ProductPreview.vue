@@ -3,21 +3,24 @@
         <header class="card-header">
             <p class="card-header-title">{{  title }}</p>
         </header>
-        <div class="card-image" :style="{ background: `center / cover no-repeat url(${src})`}">
+        <div class="card-image">
             <button v-if="src" @click="$emit('click', $event)" class="delete is-large"></button>
+            <div class="background-image" :style="{ background: `center / cover no-repeat url(${src})`}"></div>
         </div>
         <div class="card-content">
             <div class="content has-text-left">
                 <p>{{ description }}</p>
+            </div>
             <div class="is-divider is-primary"></div>
+            <div class="content has-text-left">
                 <b>Состав продукта:</b> {{ ingridients }}
             </div>
-                <div class="content">
-                    <p class="tags">
-                        <span style="margin-right: 10px"><b>Начинки:</b></span>
-                        <span v-if="sort !== ''" v-for="sort in sorts" :key="sort" class="tag is-success">{{ sort }}</span>
-                    </p>
-                </div> 
+            <div v-if="sorts && sorts.length" class="content">
+                <p class="tags">
+                    <span style="margin-right: 10px"><b>Начинки:</b></span>
+                    <span v-if="sort !== ''" v-for="sort in sorts" :key="sort" class="tag is-success">{{ sort }}</span>
+                </p>
+            </div> 
         </div>
         <footer class="card-footer">
             <p class="card-footer-item">{{ price }} Руб.</p>
@@ -38,8 +41,15 @@ export default {
 <style lang="scss" scoped>
 @import '../../_variables';
 .card-image {
-    height: 400px;
-    width: auto;
+    .background-image {
+        margin: 0 auto;
+        height: 400px;
+        width: 400px;
+        @media screen and (max-width: 320px) {
+            height: 250px;
+            width: 250px;
+        }
+    }
     button {
         position: absolute;
         right: 0;
