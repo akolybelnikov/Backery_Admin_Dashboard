@@ -25,8 +25,9 @@
               </div>
               <div class="field">
                   <label class="label">Password</label>
-                  <div class="control">
+                  <div class="control has-icons-right">
                       <input 
+                        ref="password"
                         id="password"
                         name="password"
                         class="input"
@@ -35,6 +36,9 @@
                         minlength="8"
                         maxlength="30"
                         v-bind:class="{ 'is-danger': passwordErrors.length }"/>
+                        <span @click="clickedIcon" class="icon has-text-primary is-right">
+                          <i class="fas fa-eye"></i>
+                        </span>
                   </div>
                   <p class="help is-danger" v-if="passwordErrors.length">
                       <ul>
@@ -115,9 +119,18 @@ export default {
               return null
           })
     },
+    clickedIcon: function() {
+      this.$refs.password.attributes.type.value === 'password' ?
+        this.$refs.password.attributes.type.value = "text" :
+        this.$refs.password.attributes.type.value = "password"
+    }
   }
 }
 </script>
 
 <style scoped lang='scss'>
+.icon {
+    cursor: pointer;
+    pointer-events: all;
+}
 </style>

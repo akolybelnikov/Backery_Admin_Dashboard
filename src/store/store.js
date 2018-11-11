@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import { products } from './products.module'
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -15,11 +13,11 @@ const store = new Vuex.Store({
             state.user = user
         },
         initializeStore(state) {
-            if (localStorage.getItem('store')) {
+            if (localStorage.getItem('user')) {
                 this.replaceState(
                     Object.assign(
                         state,
-                        JSON.parse(localStorage.getItem('store'))
+                        JSON.parse(localStorage.getItem('user'))
                     )
                 )
             }
@@ -39,7 +37,9 @@ const store = new Vuex.Store({
 })
 
 store.subscribe((mutation, state) => {
-    localStorage.setItem('store', JSON.stringify(state))
+    if (mutation.type === 'setUser') {
+        localStorage.setItem('user', JSON.stringify(state))
+    }
 })
 
 export default store

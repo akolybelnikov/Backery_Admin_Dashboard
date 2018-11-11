@@ -1,8 +1,5 @@
 <template>
     <div>
-        <!-- <a v-if="products.length" v-for="product in products" :key="product.productId" class="panel-block">
-            {{ product.productName}}
-        </a> -->
         <b-table
             :data="products"
             :paginated="isPaginated"
@@ -22,6 +19,9 @@
                 </b-table-column>
                 <b-table-column field="updatedAt" label="Дата обновления" sortable centered>
                     <span class="tag is-success" v-if="props.row.updatedAt">{{ Number(props.row.updatedAt) | moment("DD.MM.YYYY") }}</span>
+                </b-table-column>
+                <b-table-column field="status" label="Статус" sortable centered>
+                    {{ props.row.status }}
                 </b-table-column>
             </template>
 
