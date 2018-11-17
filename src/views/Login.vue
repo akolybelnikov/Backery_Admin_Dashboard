@@ -107,6 +107,7 @@ export default {
       this.loginErrors = []
       return Vue.prototype.$Amplify.Auth.signIn(email, password)
           .then(data => {
+            console.log(data)
               if (data && data.signInUserSession) {
                   store.commit('setUser', data)
                   AmplifyEventBus.$emit('authState', 'signedIn')
@@ -130,7 +131,7 @@ export default {
 
 <style scoped lang='scss'>
 .icon {
-    cursor: pointer;
-    pointer-events: all;
+    cursor: pointer !important;
+    pointer-events: all !important;
 }
 </style>

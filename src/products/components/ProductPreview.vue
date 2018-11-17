@@ -4,8 +4,11 @@
             <p class="card-header-title">{{  title }}</p>
         </header>
         <div class="card-image">
-            <button v-if="src" @click="$emit('click', $event)" class="delete is-large"></button>
-            <div class="background-image" :style="{ background: `center / cover no-repeat url(${src})`}"></div>
+            <!-- <button v-if="src" @click="$emit('click', $event)" class="delete is-large is-tooltip-primary tooltip"  data-tooltip="Удалить изображение?"></button> -->
+            <!-- <div class="background-image" :style="{ background: `center / cover no-repeat url(${src})`}"></div> -->
+            <figure class="image is-square">
+                <img :src="src" alt="product image">
+            </figure>
         </div>
         <div class="card-content">
             <div class="content has-text-left">
@@ -41,19 +44,12 @@ export default {
 <style lang="scss" scoped>
 @import '../../_variables';
 .card-image {
-    .background-image {
-        margin: 0 auto;
-        height: 400px;
-        width: 400px;
-        @media screen and (max-width: 320px) {
-            height: 250px;
-            width: 250px;
-        }
-    }
+    position: relative;
     button {
         position: absolute;
         right: 0;
         top: 0;
+        z-index: 10;
     }
 }
 span.tag {
