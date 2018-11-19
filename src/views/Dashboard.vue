@@ -75,15 +75,15 @@
                                             <h4>Продукт</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="#" class="dropdown-item">
+                                        <router-link to="/" class="dropdown-item">
                                             <h4>Спецпредложение</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="#" class="dropdown-item">
+                                        <router-link to="/" class="dropdown-item">
                                             <h4>Новость</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="#" class="dropdown-item">
+                                        <router-link to="/categories-list" class="dropdown-item">
                                             <h4>Категорию</h4>
                                         </router-link>
                                     </div>

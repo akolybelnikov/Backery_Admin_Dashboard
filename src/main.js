@@ -6,6 +6,8 @@ import './registerServiceWorker'
 import Amplify from 'aws-amplify'
 import UUID from 'vue-uuid'
 import Table from 'buefy/dist/components/table'
+import findindex from 'lodash.findindex'
+Object.defineProperty(Vue.prototype, '$findindex', { value: findindex })
 
 Vue.use(UUID)
 Vue.use(Table)

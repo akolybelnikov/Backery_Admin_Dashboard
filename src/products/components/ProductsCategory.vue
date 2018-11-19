@@ -27,14 +27,12 @@
 
             <template slot="detail" slot-scope="props">
                 <article class="media">
-                    <figure class="media-left">
-                        <p class="image is-64x64">
-                            <img src="../../assets/logo.png">
-                        </p>
+                    <figure class="media-left image is-64x64">
+                        <img :src="`${url}/64x64/public/${props.row.image}`">
                     </figure>
                     <div class="media-content">
                         <div class="content">
-                            <p>{{ props.row.content }}</p>
+                            <p>{{ props.row.content.substring(0, 101) }} <span v-if="props.row.content.lenght > 100">...</span></p>
                         </div>
                     </div>
                     <div class="media-right">
@@ -80,7 +78,8 @@ export default {
             isPaginationSimple: false,
             defaultSortDirection: 'desc',
             currentPage: 1,
-            perPage: 10
+            perPage: 10,
+            url: process.env.VUE_APP_IMAGE_HANDLER_URL
         }
     },
     computed: {

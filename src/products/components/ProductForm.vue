@@ -50,7 +50,8 @@
                 </div>
                 <div class="column is-full">
                     <div class="field">
-                        <product-preview
+                        <preview
+                            :product="true"
                             :title="formData.productName"
                             :description="formData.content"
                             :ingridients="formData.ingridients"
@@ -58,8 +59,7 @@
                             :price="formData.price"
                             :sorts="formData.sorts"
                             :src="src"
-                            @click="onImageRemove"
-                        ></product-preview>
+                        ></preview>
                     </div>   
                     <div v-if="currentRoute !== 'UpdateProduct'" class="field">
                         <div class="control">
@@ -73,7 +73,7 @@
                     </div>
                     <div v-if="currentRoute === 'UpdateProduct'" class="field">
                         <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Сохранить и активировать</button>
+                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Aктивировать</button>
                         </div>
                     </div>
                     <div v-if="currentRoute === 'UpdateProduct'" class="field">
@@ -85,14 +85,19 @@
                         <div class="control">
                             <button class="button is-info is-medium is-fullwidth" @click="deleteProduct()">Удалить из базы данных</button>
                         </div>    
-                    </div>                         
+                    </div>     
+                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
+                        <div class="control">
+                            <router-link to="/products-list/bread" class="button is-primary is-outlined is-fullwidth">Отменить</router-link>
+                        </div>    
+                    </div>                      
                 </div>
             </div>
         </div>
         <div class="modal" :class="{'is-active': loading}">
             <div class="modal-background"></div>
             <div class="modal-content">
-                <p class="has-text-success">... это может занять некоторое время ...</p><br><br>
+                <p class="has-text-success">... загрузка может занять некоторое время ...</p><br><br>
                 <span class="icon has-text-success">
                     <i class="fas fa-spinner fa-pulse"></i>
                 </span>
@@ -104,7 +109,7 @@
 
 <script>
 import FormGenerator from '../../components/form/FormGenerator'
-import ProductPreview from './ProductPreview'
+import Preview from '../../components/Preview'
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import {
     CreateProduct,
@@ -115,7 +120,7 @@ import {
 
 export default {
     name: 'ProductForm',
-    components: { FormGenerator, ProductPreview },
+    components: { FormGenerator, Preview },
     data() {
         return {
             formData: {
@@ -158,7 +163,7 @@ export default {
                     name: 'category',
                     options: [
                         {
-                            label: 'Хлеб и булки',
+                            label: 'Хлеб и булочки',
                             value: 'bread'
                         },
                         {
@@ -228,7 +233,7 @@ export default {
         }
     },
     created() {
-        // this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
+        this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
         if (this.$route.name === 'UpdateProduct') {
             this.fetchProduct()
         } else if (this.$route.name === 'ProductForm') {
@@ -323,17 +328,15 @@ export default {
             }
         },
         onFileUpload: function(event) {
-            if (this.notification) this.notification = false
+            if (this.notification) {
+                this.notification = false
+            }
             this.file = event.target.files[0]
             if (this.file.size > 5000000) {
                 this.notification = true
             } else {
                 this.src = URL.createObjectURL(this.file)
             }
-        },
-        onImageRemove: function() {
-            this.file = null
-            this.src = null
         },
         uploadImageToS3: async function() {
             this.formData.image = `${this.formData.productId}-${this.file.name}`

@@ -3,7 +3,7 @@
     <label class="label has-text-left">{{label}}</label>
 
     <div class="control">
-        <textarea class="textarea is-success" rows="5" maxlength="256"
+        <textarea class="textarea is-success" rows="5"
            :name="name"
            :value="value"
            @input="$emit('input', $event.target.value)"
@@ -11,7 +11,6 @@
            :class="{ 'is-danger': errors && errors.length }"
            >
         </textarea>
-        <span class="help is-fullwidth has-text-right is-primary">{{value && value.length}} / 256</span>
     </div>
     <p v-if="errors && errors.length" class="help is-danger has-text-left">
         <ul>

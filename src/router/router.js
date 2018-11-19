@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
+import Created from '../components/Created.vue'
 import ProductForm from '../products/components/ProductForm.vue'
 import ProductCreated from '../products/components/ProductCreated.vue'
 import Products from '../products/components/Products.vue'
 import ProductsCategory from '../products/components/ProductsCategory.vue'
-import OfferForm from '../components/OfferForm.vue'
-import NewsForm from '../components/NewsForm.vue'
-import CategoryForm from '../components/CategoryForm.vue'
+import OfferForm from '../offers/components/OfferForm.vue'
+import NewsForm from '../news/components/NewsForm.vue'
+import Categories from '../categories/components/Categories.vue'
+import CategoryForm from '../categories/components/CategoryForm.vue'
 import { AmplifyEventBus, AmplifyPlugin } from 'aws-amplify-vue'
 import * as AmplifyModules from 'aws-amplify'
 import store from '../store/store'
@@ -70,6 +72,14 @@ const router = new Router({
                     }
                 },
                 {
+                    path: 'created',
+                    name: 'Created',
+                    component: Created,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
                     path: 'create-offer',
                     name: 'OfferForm',
                     component: OfferForm,
@@ -118,6 +128,22 @@ const router = new Router({
                             }
                         }
                     ]
+                },
+                {
+                    path: 'categories-list',
+                    name: 'CategoriesList',
+                    component: Categories,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'update-category/:name',
+                    name: 'UpdateCategory',
+                    component: CategoryForm,
+                    meta: {
+                        requiresAuth: true
+                    }
                 }
             ]
         },
