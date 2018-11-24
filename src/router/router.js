@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Created from '../components/Created.vue'
 import ProductForm from '../products/components/ProductForm.vue'
-import ProductCreated from '../products/components/ProductCreated.vue'
 import Products from '../products/components/Products.vue'
 import ProductsCategory from '../products/components/ProductsCategory.vue'
 import OfferForm from '../offers/components/OfferForm.vue'
@@ -59,14 +58,6 @@ const router = new Router({
                     path: 'create-product',
                     name: 'ProductForm',
                     component: ProductForm,
-                    meta: {
-                        requiresAuth: true
-                    }
-                },
-                {
-                    path: 'product-created',
-                    name: 'ProductCreated',
-                    component: ProductCreated,
                     meta: {
                         requiresAuth: true
                     }

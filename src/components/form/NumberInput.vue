@@ -14,7 +14,7 @@
         </p>
         <p class="control">
           <a class="button is-success">
-            Руб.
+            <span v-if="name === 'price'">Руб.</span>
           </a>
         </p>
       </div>
@@ -30,7 +30,7 @@
 <script>
 export default {
     name: 'NumberInput',
-    props: ['placeholder', 'label', 'name', 'value', 'hasAddOns', 'errors']
+    props: ['placeholder', 'label', 'name', 'value', 'errors']
 }
 </script>
 

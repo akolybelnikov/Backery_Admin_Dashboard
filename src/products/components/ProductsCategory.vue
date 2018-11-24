@@ -27,17 +27,17 @@
 
             <template slot="detail" slot-scope="props">
                 <article class="media">
-                    <figure class="media-left image is-64x64">
+                    <figure v-if="props.row.image" class="media-left image is-64x64">
                         <img :src="`${url}/64x64/public/${props.row.image}`">
                     </figure>
                     <div class="media-content">
                         <div class="content">
-                            <p>{{ props.row.content.substring(0, 101) }} <span v-if="props.row.content.lenght > 100">...</span></p>
+                            <p v-if="props.row.content">{{ props.row.content.substring(0, 101) }} <span v-if="props.row.content.lenght > 100">...</span></p>
                         </div>
                     </div>
                     <div class="media-right">
-                        <p><strong>{{ props.row.weight }}</strong></p>
-                        <p><strong>{{ props.row.price }}</strong></p>
+                        <p v-if="props.row.weight"><strong>{{ props.row.weight }}</strong></p>
+                        <p v-if="props.row.price"><strong>{{ props.row.price }}</strong></p>
                         <br>
                         <router-link class="button is-primary" :to="{name: 'UpdateProduct', params: {id: props.row.productId, category: props.row.category}}">
                             <span class="icon">

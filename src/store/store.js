@@ -29,18 +29,19 @@ const store = new Vuex.Store({
             state.products[payload.category] = payload.items
         },
         addProduct(state, payload) {
-            state.products[payload.category].push(payload.item)
+            state.products[payload.category] &&
+                state.products[payload.category].push(payload.item)
         },
         updateProduct(state, payload) {
-            const index = state.state.products[payload.category].findIndex(
+            const index = state.products[payload.category].findIndex(
                 product => product.productId === payload.item.productId
             )
             state.products[payload.category].splice(index, 1)
             state.products[payload.category].push(payload.item)
         },
         removeProduct(state, payload) {
-            const index = state.state.products[payload.category].findIndex(
-                product => product.productId === payload.item.productId
+            const index = state.products[payload.category].findIndex(
+                product => product.productId === payload.productId
             )
             state.products[payload.category].splice(index, 1)
         },

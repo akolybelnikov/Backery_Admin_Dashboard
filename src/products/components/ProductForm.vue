@@ -268,6 +268,7 @@ export default {
                 this.setData(result.data.getProduct)
             } catch (err) {
                 this.error = true
+                console.error(err)
             }
         },
         setData: function(productData) {
@@ -347,6 +348,7 @@ export default {
                 }/${key}`
             } catch (err) {
                 this.loading = false
+                console.error(err)
             }
         },
         createProduct: async function() {
@@ -397,29 +399,31 @@ export default {
                                   }
                               )
                           )
-                if (result.data.createProduct || result.data.updateProduct) {
-                    this.currentProduct = null
+                if (result.data.createProduct) {
                     this.$store.commit({
-                        type: 'setProducts',
-                        category:
-                            result.data.createProduct.category ||
-                            result.data.updateProduct.category,
-                        items: []
+                        type: 'addProduct',
+                        category: result.data.createProduct.category,
+                        item: this.currentProduct
                     })
-                    if (this.file) this.file = null
-                    if (this.src) this.src = null
-                    this.$router.push({
-                        name: 'ProductCreated',
-                        params: {
-                            currentProduct:
-                                result.data.createProduct ||
-                                result.data.updateProduct
-                        }
+                } else if (result.data.updateProduct) {
+                    this.$store.commit({
+                        type: 'updateProduct',
+                        category: result.data.updateProduct.category,
+                        item: this.currentProduct
                     })
-                    this.loading = false
                 }
+                this.currentProduct = null
+                if (this.file) this.file = null
+                if (this.src) this.src = null
+                this.$router.push({
+                    name: 'Created',
+                    params: {
+                        message: 'Операция успешно завершена.'
+                    }
+                })
+                this.loading = false
             } catch (err) {
-                this.error = err.toString()
+                console.error(err)
                 this.loading = false
             }
         },
@@ -440,16 +444,16 @@ export default {
                 if (result.data.deleteProduct) {
                     this.currentProduct = null
                     this.$store.commit({
-                        type: 'setProducts',
+                        type: 'removeProduct',
                         category: result.data.deleteProduct.category,
-                        items: []
+                        productId: result.data.deleteProduct.productId
                     })
                     if (this.file) this.file = null
                     if (this.src) this.src = null
                     this.$router.push({
-                        name: 'ProductCreated',
+                        name: 'Created',
                         params: {
-                            deleted: true
+                            message: 'Продукт успешно удалён.'
                         }
                     })
                     this.loading = false
@@ -457,6 +461,7 @@ export default {
             } catch (err) {
                 this.error = true
                 this.loading = false
+                console.error(err)
             }
         },
         updateProduct: async function() {
