@@ -46,26 +46,16 @@
                             :src="src"
                         ></preview>
                     </div>   
-                    <div v-if="currentRoute !== 'UpdateCategory'" class="field">
+                    <div class="field">
                         <div class="control">
                             <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать онлайн</button>
                         </div>
                     </div>
-                    <div v-if="currentRoute !== 'UpdateCategory'" class="field">
+                    <div class="field">
                         <div class="control">
                             <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
                         </div>    
                     </div>
-                    <div v-if="currentRoute === 'UpdateCategory'" class="field">
-                        <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Aктивировать</button>
-                        </div>
-                    </div>
-                    <div v-if="currentRoute === 'UpdateCategory'" class="field">
-                        <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Деактивировать</button>
-                        </div>    
-                    </div> 
                     <div v-if="currentRoute === 'UpdateCategory'" class="field">
                         <div class="control">
                             <button class="button is-info is-medium is-fullwidth" @click="deleteCategory()">Удалить из базы данных</button>
@@ -109,12 +99,7 @@ export default {
     components: { FormGenerator, Preview },
     data() {
         return {
-            formData: {
-                title: '',
-                attachment: '',
-                image: '',
-                status: ''
-            },
+            formData: {},
             file: null,
             src: null,
             schema: [
@@ -254,7 +239,7 @@ export default {
         pushToDB: async function() {
             try {
                 const category = makeModel(this.formData)
-                this.category = category
+                this.currentCategory = category
                 const result =
                     this.currentRoute === 'CategoryForm'
                         ? await this.$Amplify.API.graphql(
@@ -281,7 +266,7 @@ export default {
                               item: result.data.createCategory
                           })
                         : this.$store.commit({
-                              type: 'changeCategory',
+                              type: 'updateCategory',
                               item: result.data.updateCategory
                           })
                     if (this.file) this.file = null
@@ -289,9 +274,7 @@ export default {
                     this.$router.push({
                         name: 'Created',
                         params: {
-                            currentCategory:
-                                result.data.createCategory ||
-                                result.data.updateCategory
+                            message: 'Операция успешно завершена.'
                         }
                     })
                     this.loading = false
@@ -340,12 +323,6 @@ export default {
                 )
                 this.loading = false
                 if (result.data.deleteCategory) {
-                    this.$router.push({
-                        name: 'Created',
-                        params: {
-                            deleted: true
-                        }
-                    })
                     this.currentCategory = null
                     if (this.file) {
                         this.file = null
@@ -357,6 +334,12 @@ export default {
                         type: 'removeCategory',
                         name: result.data.deleteCategory.name
                     })
+                    this.$router.push({
+                        name: 'Created',
+                        params: {
+                            message: 'Категория успешно удалена.'
+                        }
+                    })
                 }
             } catch (err) {
                 this.error = true
@@ -366,7 +349,3 @@ export default {
     }
 }
 </script>
-
-<style lang="sass" scoped>
-
-</style>

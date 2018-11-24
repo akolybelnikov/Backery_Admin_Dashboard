@@ -79,7 +79,7 @@
                                             <h4>Спецпредложение</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">
-                                        <router-link to="/" class="dropdown-item">
+                                        <router-link to="/news-list" class="dropdown-item">
                                             <h4>Новость</h4>
                                         </router-link>
                                         <hr class="dropdown-divider">

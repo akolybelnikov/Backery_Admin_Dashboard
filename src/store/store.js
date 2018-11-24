@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+    strict: process.env.NODE_ENV !== 'production',
     state: {
         user: null,
         products: {},
@@ -29,8 +30,7 @@ const store = new Vuex.Store({
             state.products[payload.category] = payload.items
         },
         addProduct(state, payload) {
-            state.products[payload.category] &&
-                state.products[payload.category].push(payload.item)
+            state.products[payload.category].push(payload.item)
         },
         updateProduct(state, payload) {
             const index = state.products[payload.category].findIndex(
@@ -59,7 +59,7 @@ const store = new Vuex.Store({
         },
         updateCategory(state, payload) {
             const index = state.categories.findIndex(
-                category => category.name === payload.name
+                category => category.name === payload.item.name
             )
             state.categories.splice(index, 1)
             state.categories.push(payload.item)

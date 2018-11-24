@@ -61,26 +61,16 @@
                             :src="src"
                         ></preview>
                     </div>   
-                    <div v-if="currentRoute !== 'UpdateProduct'" class="field">
+                    <div class="field">
                         <div class="control">
                             <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать в онлайн-магазине</button>
                         </div>
                     </div>
-                    <div v-if="currentRoute !== 'UpdateProduct'" class="field">
+                    <div class="field">
                         <div class="control">
                             <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
                         </div>    
                     </div>
-                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
-                        <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Aктивировать</button>
-                        </div>
-                    </div>
-                    <div v-if="currentRoute === 'UpdateProduct'" class="field">
-                        <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Деактивировать</button>
-                        </div>    
-                    </div> 
                     <div v-if="currentRoute === 'UpdateProduct'" class="field">
                         <div class="control">
                             <button class="button is-info is-medium is-fullwidth" @click="deleteProduct()">Удалить из базы данных</button>

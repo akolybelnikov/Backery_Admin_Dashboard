@@ -7,6 +7,7 @@ import Products from '../products/components/Products.vue'
 import ProductsCategory from '../products/components/ProductsCategory.vue'
 import OfferForm from '../offers/components/OfferForm.vue'
 import NewsForm from '../news/components/NewsForm.vue'
+import News from '../news/components/News.vue'
 import Categories from '../categories/components/Categories.vue'
 import CategoryForm from '../categories/components/CategoryForm.vue'
 import { AmplifyEventBus, AmplifyPlugin } from 'aws-amplify-vue'
@@ -132,6 +133,22 @@ const router = new Router({
                     path: 'update-category/:name',
                     name: 'UpdateCategory',
                     component: CategoryForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'news-list',
+                    name: 'NewsList',
+                    component: News,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'update-news/:id',
+                    name: 'UpdateNews',
+                    component: NewsForm,
                     meta: {
                         requiresAuth: true
                     }

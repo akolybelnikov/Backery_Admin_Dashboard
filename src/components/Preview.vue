@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <header class="card-header">
+        <header v-if="title" class="card-header">
             <p class="card-header-title">{{  title }}</p>
         </header>
         <div class="card-image">            
@@ -28,6 +28,11 @@
             <p class="card-footer-item">{{ weight }}</p>
             <a class="card-footer-item"><button class="button is-primary">Заказать</button></a>
         </footer>
+        <div v-if="news" class="card-content">
+            <div v-if="content" class="content has-text-left">
+                <p>{{ content }}</p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -44,7 +49,11 @@ export default {
         'price',
         'weight',
         'product',
-        'category'
+        'category',
+        'news',
+        'offer',
+        'filling',
+        'content'
     ]
 }
 </script>

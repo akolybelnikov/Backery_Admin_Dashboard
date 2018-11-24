@@ -110,7 +110,7 @@ export const listFillings = `query ListFillings(
     nextToken
   }
 }
-`;
+`
 export const getNews = `query GetNews($id: ID!, $status: String!) {
   getNews(id: $id, status: $status) {
     id
@@ -131,7 +131,7 @@ export const listNews = `query ListNews($filter: TableNewsFilterInput, $limit: I
     nextToken
   }
 }
-`;
+`
 export const getOffer = `query GetOffer($id: ID!, $status: String!) {
   getOffer(id: $id, status: $status) {
     id

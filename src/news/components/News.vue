@@ -1,14 +1,14 @@
 <template>
-    <div v-if="categories">
+    <div v-if="news">
         <b-table
-            :data="categories"
+            :data="news"
             :default-sort-direction="'desc'"
             default-sort="name"
             detailed
         >
             <template slot-scope="props">
-                <b-table-column field="title" label="Название" sortable>
-                    {{ props.row.title }}
+                <b-table-column field="content" label="Содержание" sortable>
+                    {{ props.row.content.substring(0, 101) }}
                 </b-table-column>
                 <b-table-column field="status" label="Статус" sortable centered>
                     {{ props.row.status }}
@@ -24,11 +24,11 @@
                     </figure>
                     <div class="media-content">
                         <div class="content">
-                            <p v-if="props.row.title">{{ props.row.title }}</p>
+                            <p v-if="props.row.content">{{ props.row.content }}</p>
                         </div>
                     </div>
                     <div class="media-right">
-                        <router-link class="button is-primary" :to="{name: 'UpdateCategory', params: {name: props.row.name}}">
+                        <router-link class="button is-primary" :to="{name: 'UpdateNews', params: {id: props.row.id}}">
                             <span class="icon">
                             <i class="mdi mdi-chevron-right"></i>
                             </span>
@@ -39,41 +39,41 @@
 
         </b-table>
     </div>
-    <div v-else>Nothing found</div>
+    <div v-else>Новостей нет</div>
 </template>
 
 <script>
-import { ListCategories } from '../graphql'
+import { ListNews } from '../graphql'
 
 export default {
-    name: 'Categories',
+    name: 'News',
     data() {
         return {
-            categories: [],
+            news: [],
             logger: {},
             actions: {
-                list: ListCategories
+                list: ListNews
             },
             url: process.env.VUE_APP_IMAGE_HANDLER_URL
         }
     },
     created() {
-        this.logger = new this.$Amplify.Logger('Categories_component')
-        this.listCategories()
+        this.logger = new this.$Amplify.Logger('News_component')
+        this.listNews()
     },
     methods: {
-        async listCategories() {
+        async listNews() {
             try {
                 const response = await this.$Amplify.API.graphql(
                     this.$Amplify.graphqlOperation(this.actions.list, {})
                 )
-                this.categories = response.data.listCategories.items
+                this.news = response.data.listNews.items
                 this.$store.commit({
-                    type: 'setCategories',
-                    items: response.data.listCategories.items
+                    type: 'setNews',
+                    items: response.data.listNews.items
                 })
             } catch (err) {
-                this.logger.error(`Error listing categories: `, err)
+                this.logger.error(`Error listing news: `, err)
             }
         }
     }
