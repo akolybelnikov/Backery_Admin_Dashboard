@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div v-if="notification" class="notification is-danger">
-                        <button @click="notification=false" class="delete is-large"></button>
+                        <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
                         Выбери изображение размером меньше 5 Мб.
                     </div>
                 </div>

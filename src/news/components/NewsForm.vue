@@ -1,18 +1,16 @@
 <template>
     <div class="columns is-centered">
-        <div class="column is-full-mobile is-half">
-            <div class="columns">
-                <div class="column is-full">
-                    <form>
-                        <form-generator :schema="schema"
-                                        v-model="formData"
-                                        :errors="errors"
-                                        @input="onValueChange"
-                        >            
-                        </form-generator>         
-                    </form>    
-                </div>    
-            </div>    
+        <div class="column is-full-mobile is-half">           
+            <form>
+                <form-generator :schema="schema"
+                                v-model="formData"
+                                :errors="errors"
+                                @input="onValueChange"
+                >            
+                </form-generator>         
+            </form>
+        </div>
+        <div class="column is-full-mobile is-half">       
             <div class="columns is-multiline">
                 <div class="column is-full">
                     <div class="field">
@@ -34,7 +32,7 @@
                         </div>
                     </div>
                     <div v-if="notification" class="notification is-danger">
-                        <button @click="notification=false" class="delete is-large"></button>
+                        <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
                         Выбери изображение размером меньше 5 Мб.
                     </div>
                 </div>
@@ -138,7 +136,6 @@ export default {
                 image: '',
                 status: ''
             }
-            console.log(this.formData)
         }
     },
     methods: {
@@ -263,6 +260,7 @@ export default {
             }
         },
         createNews: async function() {
+            this.formData.id = this.$uuid.v4()
             this.formData.createdAt = Date.now()
             this.loading = true
             if (this.file) {

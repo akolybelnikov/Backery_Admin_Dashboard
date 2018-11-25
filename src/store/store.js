@@ -48,8 +48,40 @@ const store = new Vuex.Store({
         setOffers(state, payload) {
             state.offers = payload.items
         },
+        addOffer(state, payload) {
+            state.offers.push(payload.item)
+        },
+        updateOffer(state, payload) {
+            const index = state.offers.findIndex(
+                offer => offer.id === payload.item.id
+            )
+            state.offers.splice(index, 1)
+            state.offers.push(payload.item)
+        },
+        removeOffer(state, payload) {
+            const index = state.offers.findIndex(
+                offer => offer.id === payload.item.id
+            )
+            state.offers.splice(index, 1)
+        },
         setNews(state, payload) {
             state.news = payload.items
+        },
+        addNews(state, payload) {
+            state.news.push(payload.item)
+        },
+        updateNews(state, payload) {
+            const index = state.news.findIndex(
+                news => news.id === payload.item.id
+            )
+            state.news.splice(index, 1)
+            state.news.push(payload.item)
+        },
+        removeNews(state, payload) {
+            const index = state.news.findIndex(
+                news => news.id === payload.item.id
+            )
+            state.news.splice(index, 1)
         },
         setCategories(state, payload) {
             state.categories = payload.items

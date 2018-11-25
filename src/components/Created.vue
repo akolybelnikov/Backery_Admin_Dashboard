@@ -27,7 +27,7 @@ export default {
     },
     data() {
         return {
-            message: ''
+            message: 'Не произведено операций.'
         }
     },
     created() {
@@ -35,7 +35,9 @@ export default {
     },
     methods: {
         isCreated() {
-            this.message = this.$route.params.message
+            if (this.$route.params.message && this.$route.params.message !== '') {
+                this.message = this.$route.params.message
+            } 
         }
     }
 }

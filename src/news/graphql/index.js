@@ -5,6 +5,7 @@ const GetNews = `query GetNews($id: String!) {
       image
       status
       attachment
+      createdAt
     }
   }
   `
@@ -16,6 +17,7 @@ const ListNews = `query ListNews($filter: TableNewsFilterInput, $limit: Int, $ne
         image
         status
         attachment
+        createdAt
       }
       nextToken
     }
@@ -28,6 +30,7 @@ const CreateNews = `mutation CreateNews($input: CreateNewsInput!) {
       image
       status
       attachment
+      createdAt
     }
   }
   `
@@ -38,6 +41,7 @@ const UpdateNews = `mutation UpdateNews($input: UpdateNewsInput!) {
       image
       status
       attachment
+      createdAt
     }
   }
   `
