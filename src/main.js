@@ -5,12 +5,10 @@ import store from './store/store'
 import './registerServiceWorker'
 import Amplify from 'aws-amplify'
 import UUID from 'vue-uuid'
-import Table from 'buefy/dist/components/table'
-import findindex from 'lodash.findindex'
-Object.defineProperty(Vue.prototype, '$findindex', { value: findindex })
+import Buefy from 'buefy'
 
+Vue.use(Buefy)
 Vue.use(UUID)
-Vue.use(Table)
 Vue.use(require('vue-moment'))
 
 Amplify.configure({

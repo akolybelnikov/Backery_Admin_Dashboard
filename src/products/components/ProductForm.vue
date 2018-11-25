@@ -1,55 +1,108 @@
 <template>
     <div class="columns">
-        <div class="column is-full-mobile is-half">
+        <div class="column is-full-mobile is-half has-text-left">
             <form>
-                <form-generator :schema="schema"
-                                v-model="formData"
-                                :errors="errors"
-                                @input="onValueChange"
-                >               
-                </form-generator>
-                <div class="field">
-                    <label class="label has-text-left">Начинки</label>
-                    <div class="select is-fullwidth is-success is-multiple">
-                        <select v-model="formData.sorts" multiple>
-                            <option v-for="option in sortsOptions"
-                                v-bind:value="option"
-                                :key="option">
-                                {{ option }}
-                            </option>
-                        </select>
+                <b-field
+                    :type="
+                        errors.category && errors.category.length ?
+                        'is-danger' :
+                        formData.category ? 'is-success' :
+                        ''"
+                    label="Категория продукта"
+                    :message="errors.category">
+                    <b-select
+                        @input="() => errors.category = []"
+                        v-model="formData.category"
+                        placeholder="Выбери категорию продукта:"
+                        expanded
+                    >
+                        <option
+                            v-for="category in categoryOptions"
+                            :value="category.name"
+                            :key="category.name">
+                            {{ category.title }}
+                        </option>
+                    </b-select>
+                </b-field>
+                <b-field 
+                    label="Наименование продукта"
+                    :type="
+                        errors.productName && errors.productName.length ?
+                        'is-danger' :
+                        formData.productName ? 'is-success' :
+                        ''"
+                    :message="errors.productName">
+                    <b-input placeholder="Введи название продукта" v-model="formData.productName" @input="() => errors.productName = []" type="text"></b-input>
+                </b-field>
+                <b-field 
+                    label="Вес продукта"
+                    :type="formData.weight ? 'is-success' : ''">
+                    <b-input placeholder="Введи вес продукта" v-model="formData.weight" type="text"></b-input>
+                </b-field>
+                <b-field
+                    :type="errors.price && errors.price.length ?
+                    'is-danger' : formData.price ?
+                    'is-success' : ''" label="Цена продукта" :message="errors.price">
+                    <b-field 
+                    :type="errors.price && errors.price.length ?
+                    'is-danger' : formData.price ?
+                    'is-success' : ''">
+                        <b-input placeholder="Введи цену в формате: 50.00" v-model="formData.price" @input="() => errors.price = []" type="number" expanded></b-input>
+                        <p class="control">
+                            <button class="is-success button">Руб.</button>
+                        </p>
+                    </b-field>
+                </b-field>
+                <b-field 
+                    label="Описание продукта"
+                    :type="formData.content ? 'is-success' : ''">
+                    <b-input placeholder="Описание продукта" v-model="formData.content" type="textarea"
+                    :rows="10"></b-input>
+                </b-field>
+                <b-field 
+                    label="Состав продукта"
+                    :type="formData.ingridients ? 'is-success' : ''">
+                    <b-input placeholder="Состав продукта" v-model="formData.ingridients" type="textarea"
+                    :rows="5"></b-input>
+                </b-field>
+                <b-field label="Начинки">
+                    <div id="sorts" class="is-flex">
+                        <b-checkbox
+                            v-for="sort in sortsOptions"
+                            :key="sort"
+                            v-model="formData.sorts"
+                            :native-value="sort"
+                            type="is-success"
+                        >{{ sort }}</b-checkbox>
                     </div>
-                </div>           
+                </b-field>           
             </form>    
         </div>
         <div class="column is-full-mobile is-half">
             <div class="columns is-multiline">
                 <div class="column is-full">
-                    <div class="field">
-                        <div class="file has-name is-success is-outlined is-fullwidth">
-                            <label class="file-label">
-                                <input @change="onFileUpload" class="file-input" type="file" name="attachment">
-                                <span class="file-cta">
-                                    <span class="file-icon">
-                                        <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                        Выбери изображение...
-                                    </span>
-                                </span>
-                                <span class="file-name">
-                                    {{ file && file.name }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+                    <b-field label="Изображение">
+                        <b-upload @input="onFileUpload" v-model="file" drag-drop>
+                            <section class="section">
+                                <div class="content has-text-centered">
+                                    <p>
+                                        <b-icon
+                                            icon="upload"
+                                            size="is-large">
+                                        </b-icon>
+                                    </p>
+                                    <p>Перетащи фото или нажми, чтобы загрузить</p>
+                                </div>
+                            </section>
+                        </b-upload>
+                    </b-field>                    
                     <div v-if="notification" class="notification is-danger">
                         <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
                         Выбери изображение размером меньше 5 Мб.
                     </div>
                 </div>
-                <div class="column is-full">
-                    <div class="field">
+                <div class="column is-full is-half-fullhd">
+                    <b-field label="Предварительный просмотр">
                         <preview
                             :product="true"
                             :title="formData.productName"
@@ -60,27 +113,29 @@
                             :sorts="formData.sorts"
                             :src="src"
                         ></preview>
-                    </div>   
+                    </b-field>                   
+                </div>
+                <div class="column is-full is-half-fullhd">
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать в онлайн-магазине</button>
+                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать</button>
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
+                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить</button>
                         </div>    
                     </div>
                     <div v-if="currentRoute === 'UpdateProduct'" class="field">
                         <div class="control">
-                            <button class="button is-info is-medium is-fullwidth" @click="deleteProduct()">Удалить из базы данных</button>
+                            <button class="button is-info is-medium is-fullwidth" @click="deleteProduct()">Удалить</button>
                         </div>    
                     </div>     
                     <div v-if="currentRoute === 'UpdateProduct'" class="field">
                         <div class="control">
                             <router-link to="/products-list/bread" class="button is-primary is-outlined is-fullwidth">Отменить</router-link>
                         </div>    
-                    </div>                      
+                    </div>   
                 </div>
             </div>
         </div>
@@ -98,7 +153,6 @@
 
 
 <script>
-import FormGenerator from '../../components/form/FormGenerator'
 import Preview from '../../components/Preview'
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import {
@@ -110,13 +164,35 @@ import {
 
 export default {
     name: 'ProductForm',
-    components: { FormGenerator, Preview },
+    components: { Preview },
+    watch: {
+        $route() {
+            if (this.$route.name === 'ProductForm') {
+                this.src = this.currentNews = null
+                this.formData = {
+                    productId: '',
+                    productName: '',
+                    category: '',
+                    weight: '',
+                    price: '',
+                    content: '',
+                    ingridients: '',
+                    sorts: [],
+                    attachment: '',
+                    image: '',
+                    status: '',
+                    createdAt: '',
+                    updatedAt: ''
+                }
+            }
+        }
+    },
     data() {
         return {
             formData: {
                 productId: '',
                 productName: '',
-                category: 'Выбери категорию продукта:',
+                category: null,
                 weight: '',
                 price: '',
                 content: '',
@@ -129,7 +205,6 @@ export default {
                 updatedAt: ''
             },
             sortsOptions: [
-                '',
                 'йогуртовая',
                 'вишня в шоколаде',
                 'воздушно–ореховая',
@@ -144,60 +219,22 @@ export default {
                 'пралине',
                 'фруктово-ягодная'
             ],
-            file: null,
-            src: null,
-            schema: [
+            categoryOptions: [
                 {
-                    fieldType: 'SelectList',
-                    label: 'Категория продукта',
-                    name: 'category',
-                    options: [
-                        {
-                            label: 'Хлеб и булочки',
-                            value: 'bread'
-                        },
-                        {
-                            label: 'Кондитерка',
-                            value: 'cakes'
-                        },
-                        {
-                            label: 'На заказ',
-                            value: 'order'
-                        }
-                    ],
-                    disabled: 'Выбери категорию продукта:'
+                    title: 'Хлеб и булочки',
+                    name: 'bread'
                 },
                 {
-                    fieldType: 'TextInput',
-                    placeholder: 'Наименование продукта',
-                    label: 'Наименование продукта',
-                    name: 'productName'
+                    title: 'Кондитерка',
+                    name: 'cakes'
                 },
                 {
-                    fieldType: 'TextInput',
-                    placeholder: 'Вес продукта',
-                    label: 'Вес продукта',
-                    name: 'weight'
-                },
-                {
-                    fieldType: 'NumberInput',
-                    label: 'Цена продукта',
-                    name: 'price',
-                    placeholder: 'Цена в формате: 50.00'
-                },
-                {
-                    fieldType: 'TextArea',
-                    placeholder: 'Описание продукта',
-                    label: 'Описание продукта',
-                    name: 'content'
-                },
-                {
-                    fieldType: 'TextArea',
-                    placeholder: 'Состав продукта',
-                    label: 'Состав продукта',
-                    name: 'ingridients'
+                    title: 'На заказ',
+                    name: 'order'
                 }
             ],
+            file: null,
+            src: null,
             errors: {
                 category: [],
                 productName: [],
@@ -226,28 +263,10 @@ export default {
         this.logger = new this.$Amplify.Logger('PRODUCT_FORM')
         if (this.$route.name === 'UpdateProduct') {
             this.fetchProduct()
-        } else if (this.$route.name === 'ProductForm') {
-            this.error = this.currentProduct = null
-            this.formData = {
-                productId: '',
-                productName: '',
-                category: 'Выбери категорию продукта:',
-                weight: '',
-                price: '',
-                content: '',
-                ingridients: '',
-                sorts: [],
-                attachment: '',
-                image: '',
-                status: '',
-                createdAt: '',
-                updatedAt: ''
-            }
         }
     },
     methods: {
         fetchProduct: async function() {
-            this.error = this.currentProduct = null
             try {
                 const result = await this.$Amplify.API.graphql(
                     this.$Amplify.graphqlOperation(this.actions.get, {
@@ -277,11 +296,6 @@ export default {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
                 }/450x450/public/${productData.image}`
-            }
-        },
-        onValueChange: function(fieldName, value) {
-            if (value) {
-                this.errors[fieldName] = []
             }
         },
         checkForm: function(action) {
@@ -318,11 +332,10 @@ export default {
                     : this.createProduct()
             }
         },
-        onFileUpload: function(event) {
+        onFileUpload: function(file) {
             if (this.notification) {
                 this.notification = false
             }
-            this.file = event.target.files[0]
             if (this.file.size > 5000000) {
                 this.notification = true
             } else {
@@ -479,7 +492,14 @@ export default {
 i {
     font-size: 3rem;
 }
-span.file-label {
+span.icon {
     color: $primary;
+}
+#sorts {
+    flex-wrap: wrap;
+    .b-checkbox.checkbox {
+        margin-left: 0.5em;
+        padding: 10px;
+    }
 }
 </style>

@@ -4,9 +4,7 @@
             <p class="card-header-title">{{  title }}</p>
         </header>
         <div class="card-image">            
-            <figure class="image is-square">
-                <img v-if="src" :src="src" alt="image preview">
-            </figure>
+            <figure :style="`background: center / cover url(${src}) white`" class="image is-square"></figure>
         </div>
         <div v-if="product" class="card-content">
             <div v-if="description" class="content has-text-left">

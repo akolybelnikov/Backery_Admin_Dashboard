@@ -1,62 +1,61 @@
 <template>
     <div class="columns is-centered">
-        <div class="column is-full-mobile is-half">           
-            <form>
-                <form-generator :schema="schema"
-                                v-model="formData"
-                                :errors="errors"
-                                @input="onValueChange"
-                >            
-                </form-generator>         
-            </form>
+        <div class="column columns is-multiline has-text-left">
+            <div class="column is-full">           
+                <form>
+                    <b-field 
+                        label="Содержание новости"
+                        :type="formData.content ? 'is-success' : ''">
+                        <b-input placeholder="Содержание новости" v-model="formData.content" type="textarea"
+                        :rows="15"></b-input>
+                    </b-field>    
+                </form>
+            </div>
+            <div class="column is-full">
+                <b-field label="Изображение">
+                    <b-upload @input="onFileUpload" v-model="file" drag-drop>
+                        <section class="section">
+                            <div class="content has-text-centered">
+                                <p>
+                                    <b-icon
+                                        icon="upload"
+                                        size="is-large">
+                                    </b-icon>
+                                </p>
+                                <p>Перетащи фото или нажми, чтобы загрузить</p>
+                            </div>
+                        </section>
+                    </b-upload>
+                </b-field>
+                <div v-if="notification" class="notification is-danger">
+                    <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
+                    Выбери изображение размером меньше 5 Мб.
+                </div>
+            </div>
         </div>
         <div class="column is-full-mobile is-half">       
             <div class="columns is-multiline">
                 <div class="column is-full">
-                    <div class="field">
-                        <div class="file has-name is-success is-outlined is-fullwidth">
-                            <label class="file-label">
-                                <input @change="onFileUpload" class="file-input" type="file" name="attachment">
-                                <span class="file-cta">
-                                    <span class="file-icon">
-                                        <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                        Выбери изображение...
-                                    </span>
-                                </span>
-                                <span class="file-name">
-                                    {{ file && file.name }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    <div v-if="notification" class="notification is-danger">
-                        <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
-                        Выбери изображение размером меньше 5 Мб.
-                    </div>
-                </div>
-                <div class="column is-full">
-                    <div class="field">
+                    <b-field label="Предварительный просмотр">
                         <preview
                             :news="true"
                             :content="formData.content"
                             :src="src"
                         ></preview>
-                    </div>   
+                    </b-field>   
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="submitForm('publish')">Опубликовать онлайн</button>
+                            <button class="button is-primary is-medium is-fullwidth" @click="submitForm('publish')">Опубликовать</button>
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="submitForm('save')">Сохранить и опубликовать позже</button>
+                            <button class="button is-success is-medium is-fullwidth" @click="submitForm('save')">Сохранить</button>
                         </div>    
                     </div>
                     <div v-if="currentRoute === 'UpdateNews'" class="field">
                         <div class="control">
-                            <button class="button is-info is-medium is-fullwidth" @click="deleteNews()">Удалить из базы данных</button>
+                            <button class="button is-info is-medium is-fullwidth" @click="deleteNews()">Удалить</button>
                         </div>    
                     </div>     
                     <div v-if="currentRoute === 'UpdateNews'" class="field">
@@ -81,7 +80,6 @@
 
 
 <script>
-import FormGenerator from '../../components/form/FormGenerator'
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import { makeModel } from '../../helpers/model'
 import Preview from '../../components/Preview'
@@ -89,20 +87,30 @@ import { CreateNews, GetNews, UpdateNews, DeleteNews } from '../graphql'
 
 export default {
     name: 'NewsForm',
-    components: { FormGenerator, Preview },
+    components: { Preview },
+    watch: {
+        $route() {
+            if (this.$route.name === 'NewsForm') {
+                this.src = this.currentNews = null
+                this.formData = {
+                    content: '',
+                    attachment: '',
+                    image: '',
+                    status: ''
+                }
+            }
+        }
+    },
     data() {
         return {
-            formData: {},
+            formData: {
+                content: '',
+                attachment: '',
+                image: '',
+                status: ''
+            },
             file: null,
             src: null,
-            schema: [
-                {
-                    fieldType: 'TextArea',
-                    placeholder: 'Содержание новости',
-                    label: 'Содержание новости',
-                    name: 'content'
-                }
-            ],
             notification: false,
             currentNews: null,
             mutations: {
@@ -113,10 +121,7 @@ export default {
             actions: {
                 get: GetNews
             },
-            loading: false,
-            errors: {
-                content: []
-            }
+            loading: false
         }
     },
     computed: {
@@ -128,30 +133,17 @@ export default {
         this.logger = new this.$Amplify.Logger('News_form')
         if (this.$route.name === 'UpdateNews') {
             this.fetchNews()
-        } else if (this.$route.name === 'NewsForm') {
-            this.currentNews = null
-            this.formData = {
-                content: '',
-                attachment: '',
-                image: '',
-                status: ''
-            }
         }
     },
     methods: {
         fetchNews: async function() {
-            this.currentNews = null
             try {
                 const result = await this.$Amplify.API.graphql(
                     this.$Amplify.graphqlOperation(this.actions.get, {
                         id: this.$route.params.id
                     })
                 )
-                result.data.getNews
-                    ? this.setData(result.data.getNews)
-                    : this.$router.push({
-                          name: 'News'
-                      })
+                this.setData(result.data.getNews)
             } catch (err) {
                 this.error = true
             }
@@ -171,12 +163,7 @@ export default {
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
-                }/250x250/public/${data.image}`
-            }
-        },
-        onValueChange: function(fieldName, value) {
-            if (value) {
-                this.errors[fieldName] = []
+                }/450x450/public/${data.image}`
             }
         },
         submitForm: function(action) {
@@ -189,11 +176,10 @@ export default {
                 ? this.updateNews()
                 : this.createNews()
         },
-        onFileUpload: function(event) {
+        onFileUpload: function(file) {
             if (this.notification) {
                 this.notification = false
             }
-            this.file = event.target.files[0]
             if (this.file.size > 5000000) {
                 this.notification = true
             } else {
@@ -309,7 +295,7 @@ export default {
                     }
                     this.$store.commit({
                         type: 'removeNews',
-                        name: result.data.deleteNews.id
+                        id: result.data.deleteNews.id
                     })
                     this.$router.push({
                         name: 'Created',

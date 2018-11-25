@@ -76,7 +76,7 @@ export default {
             category: null,
             isPaginated: true,
             isPaginationSimple: false,
-            defaultSortDirection: 'desc',
+            defaultSortDirection: 'asc',
             currentPage: 1,
             perPage: 10,
             url: process.env.VUE_APP_IMAGE_HANDLER_URL

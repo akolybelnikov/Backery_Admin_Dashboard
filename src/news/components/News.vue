@@ -79,14 +79,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-@import '../../_variables.scss';
-.b-table .table tr.detail {
-    background: $success-shadow;
-    box-shadow: inset 0 1px 3px $success;
-    color: $info;
-}
-.table {
-    color: $primary;
-}
-</style>

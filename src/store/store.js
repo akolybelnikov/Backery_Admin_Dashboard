@@ -78,9 +78,7 @@ const store = new Vuex.Store({
             state.news.push(payload.item)
         },
         removeNews(state, payload) {
-            const index = state.news.findIndex(
-                news => news.id === payload.item.id
-            )
+            const index = state.news.findIndex(news => news.id === payload.id)
             state.news.splice(index, 1)
         },
         setCategories(state, payload) {

@@ -1,64 +1,65 @@
 <template>
-    <div class="columns is-centered">
-        <div class="column is-full-mobile is-half">
-            <div class="columns">
-                <div class="column is-full">
-                    <form>
-                        <form-generator :schema="schema"
-                                        v-model="formData"
-                                        :errors="errors"
-                                        @input="onValueChange"
-                        >               
-                        </form-generator>         
-                    </form>    
-                </div>    
-            </div>    
+    <div class="columns is-centered is-multiline">
+        <div class="column is-half columns is-multiline">
+            <div class="column is-full">
+                <form>
+                    <b-field 
+                        label="Описание категории одним английским словом"
+                        :type="formData.name ? 'is-success' : ''">
+                        <b-input placeholder="Описание категории" v-model="formData.name" type="text"></b-input>
+                    </b-field>
+                    <b-field 
+                        label="Наименование категории"
+                        :type="formData.title ? 'is-success' : ''">
+                        <b-input placeholder="Наименование категории" v-model="formData.title" type="text"></b-input>
+                    </b-field>     
+                </form>    
+            </div>
+            <div class="column is-full">
+                <b-field label="Изображение">
+                    <b-upload @input="onFileUpload" v-model="file" drag-drop>
+                        <section class="section">
+                            <div class="content has-text-centered">
+                                <p>
+                                    <b-icon
+                                        icon="upload"
+                                        size="is-large">
+                                    </b-icon>
+                                </p>
+                                <p>Перетащи фото или нажми, чтобы загрузить</p>
+                            </div>
+                        </section>
+                    </b-upload>
+                </b-field>
+                <div v-if="notification" class="notification is-danger">
+                    <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
+                    Выбери изображение размером меньше 5 Мб.
+                </div>
+            </div>
+        </div>
+        <div class="column is-half">   
             <div class="columns is-multiline">
                 <div class="column is-full">
-                    <div class="field">
-                        <div class="file has-name is-success is-outlined is-fullwidth">
-                            <label class="file-label">
-                                <input @change="onFileUpload" class="file-input" type="file" name="attachment">
-                                <span class="file-cta">
-                                    <span class="file-icon">
-                                        <i class="fas fa-upload"></i>
-                                    </span>
-                                    <span class="file-label">
-                                        Выбери изображение...
-                                    </span>
-                                </span>
-                                <span class="file-name">
-                                    {{ file && file.name }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    <div v-if="notification" class="notification is-danger">
-                        <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
-                        Выбери изображение размером меньше 5 Мб.
-                    </div>
-                </div>
-                <div class="column is-full">
-                    <div class="field">
+                    <b-field label="Предварительный просмотр">
                         <preview
                             :title="formData.title"
                             :category="true"
                             :src="src"
                         ></preview>
-                    </div>   
+                    </b-field>   
                     <div class="field">
                         <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать онлайн</button>
+                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать</button>
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить и опубликовать позже</button>
+                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить</button>
                         </div>    
                     </div>
                     <div v-if="currentRoute === 'UpdateCategory'" class="field">
                         <div class="control">
-                            <button class="button is-info is-medium is-fullwidth" @click="deleteCategory()">Удалить из базы данных</button>
+                            <button class="button is-info is-medium is-fullwidth" @click="deleteCategory()">Удалить</button>
                         </div>    
                     </div>     
                     <div v-if="currentRoute === 'UpdateCategory'" class="field">
@@ -83,7 +84,6 @@
 
 
 <script>
-import FormGenerator from '../../components/form/FormGenerator'
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import { makeModel } from '../../helpers/model'
 import Preview from '../../components/Preview'
@@ -96,28 +96,29 @@ import {
 
 export default {
     name: 'CategoryForm',
-    components: { FormGenerator, Preview },
+    components: { Preview },
+    watch: {
+        $route() {
+            if (this.$route.name === 'CategoryForm') {
+                this.src = this.currentCategory = null
+                this.formData = {
+                    name: '',
+                    title: '',
+                    attachment: '',
+                    image: '',
+                    status: ''
+                }
+            }
+        }
+    },
     data() {
         return {
             formData: {},
             file: null,
             src: null,
-            schema: [
-                {
-                    fieldType: 'TextInput',
-                    placeholder: 'Описание категории',
-                    label: 'Описание категории одним английским словом',
-                    name: 'name'
-                },
-                {
-                    fieldType: 'TextInput',
-                    placeholder: 'Наименование категории',
-                    label: 'Наименование категории',
-                    name: 'title'
-                }
-            ],
             errors: {
-                title: []
+                title: [],
+                name: []
             },
             notification: false,
             currentCategory: null,
@@ -142,20 +143,12 @@ export default {
         this.logger = new this.$Amplify.Logger('Category_form')
         if (this.$route.name === 'UpdateCategory') {
             this.fetchCategory()
-        } else if (this.$route.name === 'CategoryForm') {
-            this.error = this.currentCategory = null
-            this.formData = {
-                name: '',
-                title: '',
-                attachment: '',
-                image: '',
-                status: ''
-            }
         }
     },
     methods: {
         fetchCategory: async function() {
-            this.error = this.currentCategory = null
+            this.error = false
+            this.currentCategory = null
             try {
                 const result = await this.$Amplify.API.graphql(
                     this.$Amplify.graphqlOperation(this.actions.get, {
@@ -189,16 +182,14 @@ export default {
                 }/450x450/public/${data.image}`
             }
         },
-        onValueChange: function(fieldName, value) {
-            if (value) {
-                this.errors[fieldName] = []
-            }
-        },
         checkForm: function(action) {
             for (let field in this.errors) {
                 if (this.errors.hasOwnProperty(field)) {
                     this.errors[field] = []
                 }
+            }
+            if (!this.formData.name || this.formData.name === '') {
+                this.errors.name.push('Укажи название категории.')
             }
             if (!this.formData.title || this.formData.title === '') {
                 this.errors.title.push('Укажи название категории.')
@@ -214,11 +205,10 @@ export default {
                     : this.createCategory()
             }
         },
-        onFileUpload: function(event) {
+        onFileUpload: function(file) {
             if (this.notification) {
                 this.notification = false
             }
-            this.file = event.target.files[0]
             if (this.file.size > 5000000) {
                 this.notification = true
             } else {
