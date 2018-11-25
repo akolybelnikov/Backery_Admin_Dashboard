@@ -332,7 +332,7 @@ export default {
                     : this.createProduct()
             }
         },
-        onFileUpload: function(file) {
+        onFileUpload: function() {
             if (this.notification) {
                 this.notification = false
             }

@@ -176,7 +176,7 @@ export default {
                 ? this.updateNews()
                 : this.createNews()
         },
-        onFileUpload: function(file) {
+        onFileUpload: function() {
             if (this.notification) {
                 this.notification = false
             }

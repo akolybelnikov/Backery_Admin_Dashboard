@@ -205,7 +205,7 @@ export default {
                     : this.createCategory()
             }
         },
-        onFileUpload: function(file) {
+        onFileUpload: function() {
             if (this.notification) {
                 this.notification = false
             }
