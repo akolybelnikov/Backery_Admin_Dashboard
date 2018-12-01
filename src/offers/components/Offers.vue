@@ -1,5 +1,5 @@
 <template>
-    <div v-if="offers">
+    <div v-if="offers.length">
         <b-table
             :data="offers"
             :default-sort-direction="'desc'"

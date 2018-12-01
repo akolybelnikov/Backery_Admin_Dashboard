@@ -41,6 +41,10 @@
                                         <router-link to="/create-category" class="dropdown-item">
                                             <h4>Категорию</h4>
                                         </router-link>
+                                        <hr class="dropdown-divider">
+                                        <router-link to="/create-filling" class="dropdown-item">
+                                            <h4>Начинку</h4>
+                                        </router-link>
                                     </div>
                                 </div>
                             </div>
@@ -85,6 +89,10 @@
                                         <hr class="dropdown-divider">
                                         <router-link to="/categories-list" class="dropdown-item">
                                             <h4>Категорию</h4>
+                                        </router-link>
+                                        <hr class="dropdown-divider">
+                                        <router-link to="/fillings-list" class="dropdown-item">
+                                            <h4>Начинку</h4>
                                         </router-link>
                                     </div>
                                 </div>

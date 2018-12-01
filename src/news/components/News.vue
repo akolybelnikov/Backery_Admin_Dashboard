@@ -1,5 +1,5 @@
 <template>
-    <div v-if="news">
+    <div v-if="news.length">
         <b-table
             :data="news"
             :default-sort-direction="'desc'"
@@ -8,7 +8,7 @@
         >
             <template slot-scope="props">
                 <b-table-column field="content" label="Содержание" sortable>
-                    {{ props.row.content.substring(0, 101) }}
+                    <span v-if="props.row.content">{{ props.row.content.substring(0, 101) }}</span>
                 </b-table-column>
                 <b-table-column field="status" label="Статус" sortable centered>
                     {{ props.row.status }}

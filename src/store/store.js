@@ -118,7 +118,7 @@ const store = new Vuex.Store({
             const index = state.fillings.findIndex(
                 filling => filling.name === payload.name
             )
-            state.filling.splice(index, 1)
+            state.fillings.splice(index, 1)
         }
     },
     getters: {

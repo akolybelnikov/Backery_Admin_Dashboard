@@ -81,7 +81,7 @@
 
 <script>
 import { s3Upload, s3Delete } from '../../helpers/aws'
-import { makeModel } from '../../helpers/model'
+import { makeModel, setFormData } from '../../helpers/model'
 import Preview from '../../components/Preview'
 import { CreateNews, GetNews, UpdateNews, DeleteNews } from '../graphql'
 
@@ -149,17 +149,7 @@ export default {
             }
         },
         setData: function(data) {
-            for (let key in data) {
-                if (data.hasOwnProperty(key)) {
-                    if (
-                        data[key] &&
-                        data[key] !== undefined &&
-                        data[key] !== ''
-                    ) {
-                        this.formData[key] = data[key]
-                    }
-                }
-            }
+            this.formData = setFormData(this.formData, data)
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL

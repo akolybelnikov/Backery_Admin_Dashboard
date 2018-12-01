@@ -11,6 +11,8 @@ import NewsForm from '../news/components/NewsForm.vue'
 import News from '../news/components/News.vue'
 import Categories from '../categories/components/Categories.vue'
 import CategoryForm from '../categories/components/CategoryForm.vue'
+import Fillings from '../fillings/components/Fillings.vue'
+import FillingForm from '../fillings/components/FillingForm.vue'
 import { AmplifyEventBus, AmplifyPlugin } from 'aws-amplify-vue'
 import * as AmplifyModules from 'aws-amplify'
 import store from '../store/store'
@@ -166,6 +168,30 @@ const router = new Router({
                     path: 'created',
                     name: 'Created',
                     component: Created,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'fillings-list',
+                    name: 'FillingsList',
+                    component: Fillings,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'create-filling',
+                    name: 'FillingForm',
+                    component: FillingForm,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                {
+                    path: 'update-filling/:name',
+                    name: 'UpdateFilling',
+                    component: FillingForm,
                     meta: {
                         requiresAuth: true
                     }

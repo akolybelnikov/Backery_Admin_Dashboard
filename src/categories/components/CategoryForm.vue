@@ -1,91 +1,102 @@
 <template>
-    <div class="columns is-centered is-multiline">
-        <div class="column is-half columns is-multiline">
-            <div class="column is-full">
-                <form>
-                    <b-field 
-                        label="Описание категории одним английским словом"
-                        :type="formData.name ? 'is-success' : ''">
-                        <b-input placeholder="Описание категории" v-model="formData.name" type="text"></b-input>
-                    </b-field>
-                    <b-field 
-                        label="Наименование категории"
-                        :type="formData.title ? 'is-success' : ''">
-                        <b-input placeholder="Наименование категории" v-model="formData.title" type="text"></b-input>
-                    </b-field>     
-                </form>    
-            </div>
-            <div class="column is-full">
-                <b-field label="Изображение">
-                    <b-upload @input="onFileUpload" v-model="file" drag-drop>
-                        <section class="section">
-                            <div class="content has-text-centered">
-                                <p>
-                                    <b-icon
-                                        icon="upload"
-                                        size="is-large">
-                                    </b-icon>
-                                </p>
-                                <p>Перетащи фото или нажми, чтобы загрузить</p>
-                            </div>
-                        </section>
-                    </b-upload>
-                </b-field>
-                <div v-if="notification" class="notification is-danger">
-                    <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
-                    Выбери изображение размером меньше 5 Мб.
-                </div>
-            </div>
+  <div class="columns is-centered is-multiline">
+    <div class="column is-half columns is-multiline">
+      <div class="column is-full">
+        <form>
+          <b-field
+            label="Описание категории одним английским словом"
+            :type="errors.name && errors.name.length ? 'is-danger' : formData.name ? 'is-success' : ''"
+            :message="errors.name"
+          >
+            <b-input placeholder="Описание категории" v-model="formData.name" type="text"></b-input>
+          </b-field>
+          <b-field
+            label="Наименование категории"
+            :type="errors.title && errors.title.length ? 'is-danger' : formData.title ? 'is-success' : ''"
+            :message="errors.title"
+          >
+            <b-input placeholder="Наименование категории" v-model="formData.title" type="text"></b-input>
+          </b-field>
+        </form>
+      </div>
+      <div class="column is-full">
+        <b-field label="Изображение">
+          <b-upload @input="onFileUpload" v-model="file" drag-drop>
+            <section class="section">
+              <div class="content has-text-centered">
+                <p>
+                  <b-icon icon="upload" size="is-large"></b-icon>
+                </p>
+                <p>Перетащи фото или нажми, чтобы загрузить</p>
+              </div>
+            </section>
+          </b-upload>
+        </b-field>
+        <div v-if="notification" class="notification is-danger">
+          <button @click="notification=false; file=null, image=null" class="delete is-large"></button>
+          Выбери изображение размером меньше 5 Мб.
         </div>
-        <div class="column is-half">   
-            <div class="columns is-multiline">
-                <div class="column is-full">
-                    <b-field label="Предварительный просмотр">
-                        <preview
-                            :title="formData.title"
-                            :category="true"
-                            :src="src"
-                        ></preview>
-                    </b-field>   
-                    <div class="field">
-                        <div class="control">
-                            <button class="button is-primary is-medium is-fullwidth" @click="checkForm('publish')">Опубликовать</button>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <button class="button is-success is-medium is-fullwidth" @click="checkForm('save')">Сохранить</button>
-                        </div>    
-                    </div>
-                    <div v-if="currentRoute === 'UpdateCategory'" class="field">
-                        <div class="control">
-                            <button class="button is-info is-medium is-fullwidth" @click="deleteCategory()">Удалить</button>
-                        </div>    
-                    </div>     
-                    <div v-if="currentRoute === 'UpdateCategory'" class="field">
-                        <div class="control">
-                            <router-link to="/categories-list" class="button is-primary is-outlined is-fullwidth">Отменить</router-link>
-                        </div>    
-                    </div>                      
-                </div>
-            </div>
-        </div>
-        <div class="modal" :class="{'is-active': loading}">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <p class="has-text-success">... загрузка может занять некоторое время ...</p><br><br>
-                <span class="icon has-text-success">
-                    <i class="fas fa-spinner fa-pulse"></i>
-                </span>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="column is-half">
+      <div class="columns is-multiline">
+        <div class="column is-full">
+          <b-field label="Предварительный просмотр">
+            <preview :title="formData.title" :category="true" :src="src"></preview>
+          </b-field>
+          <div class="field">
+            <div class="control">
+              <button
+                class="button is-primary is-medium is-fullwidth"
+                @click="checkForm('publish')"
+              >Опубликовать</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button
+                class="button is-success is-medium is-fullwidth"
+                @click="checkForm('save')"
+              >Сохранить</button>
+            </div>
+          </div>
+          <div v-if="currentRoute === 'UpdateCategory'" class="field">
+            <div class="control">
+              <button
+                class="button is-info is-medium is-fullwidth"
+                @click="deleteCategory()"
+              >Удалить</button>
+            </div>
+          </div>
+          <div v-if="currentRoute === 'UpdateCategory'" class="field">
+            <div class="control">
+              <router-link
+                to="/categories-list"
+                class="button is-primary is-outlined is-fullwidth"
+              >Отменить</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" :class="{'is-active': loading}">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <p class="has-text-success">... загрузка может занять некоторое время ...</p>
+        <br>
+        <br>
+        <span class="icon has-text-success">
+          <i class="fas fa-spinner fa-pulse"></i>
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 
 <script>
 import { s3Upload, s3Delete } from '../../helpers/aws'
-import { makeModel } from '../../helpers/model'
+import { makeModel, setFormData } from '../../helpers/model'
 import Preview from '../../components/Preview'
 import {
     CreateCategory,
@@ -113,7 +124,13 @@ export default {
     },
     data() {
         return {
-            formData: {},
+            formData: {
+                name: '',
+                title: '',
+                attachment: '',
+                image: '',
+                status: ''
+            },
             file: null,
             src: null,
             errors: {
@@ -165,17 +182,7 @@ export default {
             }
         },
         setData: function(data) {
-            for (let key in data) {
-                if (data.hasOwnProperty(key)) {
-                    if (
-                        data[key] &&
-                        data[key] !== undefined &&
-                        data[key] !== ''
-                    ) {
-                        this.formData[key] = data[key]
-                    }
-                }
-            }
+            this.formData = setFormData(this.formData, data)
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
@@ -194,7 +201,7 @@ export default {
             if (!this.formData.title || this.formData.title === '') {
                 this.errors.title.push('Укажи название категории.')
             }
-            if (!this.errors.title.length) {
+            if (!this.errors.name.length && !this.errors.title.length) {
                 if (action === 'publish') {
                     this.formData.status = 'active'
                 } else {

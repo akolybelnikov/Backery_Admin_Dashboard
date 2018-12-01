@@ -1,5 +1,5 @@
 <template>
-    <div v-if="categories">
+    <div v-if="categories.length">
         <b-table
             :data="categories"
             :default-sort-direction="'desc'"
@@ -35,7 +35,7 @@
 
         </b-table>
     </div>
-    <div v-else>Nothing found</div>
+    <div v-else>Категорий нет</div>
 </template>
 
 <script>
