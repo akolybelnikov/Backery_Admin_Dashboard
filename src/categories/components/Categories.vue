@@ -17,11 +17,7 @@
 
             <template slot="detail" slot-scope="props">
                 <article class="media">
-                    <figure class="media-left">
-                        <p class="image is-64x64">
-                            <img v-if="props.row.image" :src="`${url}/64x64/public/${props.row.image}`">
-                        </p>
-                    </figure>
+                    <figure v-if="props.row.image" :style="`background: center / cover url(${url}/64x64/public/${props.row.image}) white`" class="image is-64x64 media-left"></figure>
                     <div class="media-content">
                         <div class="content">
                             <p v-if="props.row.title">{{ props.row.title }}</p>

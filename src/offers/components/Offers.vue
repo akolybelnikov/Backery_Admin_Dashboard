@@ -1,9 +1,9 @@
 <template>
-    <div v-if="news">
+    <div v-if="offers">
         <b-table
-            :data="news"
+            :data="offers"
             :default-sort-direction="'desc'"
-            default-sort="name"
+            default-sort="status"
             detailed
         >
             <template slot-scope="props">
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="media-right">
-                        <router-link class="button is-primary" :to="{name: 'UpdateNews', params: {id: props.row.id}}">
+                        <router-link class="button is-primary" :to="{name: 'UpdateOffer', params: {id: props.row.id, status: props.row.status}}">
                             <span class="icon">
                             <i class="mdi mdi-chevron-right"></i>
                             </span>
@@ -35,41 +35,41 @@
 
         </b-table>
     </div>
-    <div v-else>Новостей нет</div>
+    <div v-else>Специальных предложений нет</div>
 </template>
 
 <script>
-import { ListNews } from '../graphql'
+import { ListOffers } from '../graphql'
 
 export default {
-    name: 'News',
+    name: 'Offers',
     data() {
         return {
-            news: [],
+            offers: [],
             logger: {},
-            actions: {
-                list: ListNews
+            queries: {
+                list: ListOffers
             },
             url: process.env.VUE_APP_IMAGE_HANDLER_URL
         }
     },
     created() {
-        this.logger = new this.$Amplify.Logger('News_component')
-        this.listNews()
+        this.logger = new this.$Amplify.Logger('Offers_component')
+        this.listOffers()
     },
     methods: {
-        async listNews() {
+        async listOffers() {
             try {
                 const response = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.actions.list, {})
+                    this.$Amplify.graphqlOperation(this.queries.list, {})
                 )
-                this.news = response.data.listNews.items
+                this.offers = response.data.listOffers.items
                 this.$store.commit({
-                    type: 'setNews',
-                    items: response.data.listNews.items
+                    type: 'setOffers',
+                    items: response.data.listOffers.items
                 })
             } catch (err) {
-                this.logger.error(`Error listing news: `, err)
+                this.logger.error(`Error listing offers: `, err)
             }
         }
     }

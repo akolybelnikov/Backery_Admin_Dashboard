@@ -10,7 +10,8 @@ const store = new Vuex.Store({
         products: {},
         categories: [],
         news: [],
-        offers: []
+        offers: [],
+        fillings: []
     },
     mutations: {
         setUser(state, user) {
@@ -60,7 +61,7 @@ const store = new Vuex.Store({
         },
         removeOffer(state, payload) {
             const index = state.offers.findIndex(
-                offer => offer.id === payload.item.id
+                offer => offer.id === payload.id
             )
             state.offers.splice(index, 1)
         },
@@ -99,6 +100,25 @@ const store = new Vuex.Store({
                 category => category.name === payload.name
             )
             state.categories.splice(index, 1)
+        },
+        setFillings(state, payload) {
+            state.fillings = payload.items
+        },
+        addFilling(state, payload) {
+            state.fillings.push(payload.item)
+        },
+        updateFilling(state, payload) {
+            const index = state.fillings.findIndex(
+                filling => filling.name === payload.item.name
+            )
+            state.fillings.splice(index, 1)
+            state.fillings.push(payload.item)
+        },
+        removeFilling(state, payload) {
+            const index = state.fillings.findIndex(
+                filling => filling.name === payload.name
+            )
+            state.filling.splice(index, 1)
         }
     },
     getters: {
@@ -110,7 +130,8 @@ const store = new Vuex.Store({
         },
         getCategories: state => state.categories,
         getOffers: state => state.offers,
-        getNews: state => state.news
+        getNews: state => state.news,
+        getFillings: state => state.fillings
     }
 })
 

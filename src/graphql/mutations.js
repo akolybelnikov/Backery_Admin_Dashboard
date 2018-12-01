@@ -67,21 +67,21 @@ export const createProductsTable = `mutation CreateProductsTable($input: CreateP
     productId
   }
 }
-`;
+`
 export const updateProductsTable = `mutation UpdateProductsTable($input: UpdateProductsTableInput!) {
   updateProductsTable(input: $input) {
     category
     productId
   }
 }
-`;
+`
 export const deleteProductsTable = `mutation DeleteProductsTable($input: DeleteProductsTableInput!) {
   deleteProductsTable(input: $input) {
     category
     productId
   }
 }
-`;
+`
 export const createCategory = `mutation CreateCategory($input: CreateCategoryInput!) {
   createCategory(input: $input) {
     title
@@ -89,7 +89,7 @@ export const createCategory = `mutation CreateCategory($input: CreateCategoryInp
     image
   }
 }
-`;
+`
 export const updateCategory = `mutation UpdateCategory($input: UpdateCategoryInput!) {
   updateCategory(input: $input) {
     title
@@ -97,7 +97,7 @@ export const updateCategory = `mutation UpdateCategory($input: UpdateCategoryInp
     image
   }
 }
-`;
+`
 export const deleteCategory = `mutation DeleteCategory($input: DeleteCategoryInput!) {
   deleteCategory(input: $input) {
     title
@@ -105,25 +105,25 @@ export const deleteCategory = `mutation DeleteCategory($input: DeleteCategoryInp
     image
   }
 }
-`;
+`
 export const createFilling = `mutation CreateFilling($input: CreateFillingInput!) {
   createFilling(input: $input) {
     title
   }
 }
-`;
+`
 export const updateFilling = `mutation UpdateFilling($input: UpdateFillingInput!) {
   updateFilling(input: $input) {
     title
   }
 }
-`;
+`
 export const deleteFilling = `mutation DeleteFilling($input: DeleteFillingInput!) {
   deleteFilling(input: $input) {
     title
   }
 }
-`;
+`
 export const createNews = `mutation CreateNews($input: CreateNewsInput!) {
   createNews(input: $input) {
     id
@@ -132,7 +132,7 @@ export const createNews = `mutation CreateNews($input: CreateNewsInput!) {
     status
   }
 }
-`;
+`
 export const updateNews = `mutation UpdateNews($input: UpdateNewsInput!) {
   updateNews(input: $input) {
     id
@@ -141,7 +141,7 @@ export const updateNews = `mutation UpdateNews($input: UpdateNewsInput!) {
     status
   }
 }
-`;
+`
 export const deleteNews = `mutation DeleteNews($input: DeleteNewsInput!) {
   deleteNews(input: $input) {
     id
@@ -150,7 +150,7 @@ export const deleteNews = `mutation DeleteNews($input: DeleteNewsInput!) {
     status
   }
 }
-`;
+`
 export const createOffer = `mutation CreateOffer($input: CreateOfferInput!) {
   createOffer(input: $input) {
     id
@@ -159,7 +159,7 @@ export const createOffer = `mutation CreateOffer($input: CreateOfferInput!) {
     status
   }
 }
-`;
+`
 export const updateOffer = `mutation UpdateOffer($input: UpdateOfferInput!) {
   updateOffer(input: $input) {
     id
@@ -168,7 +168,7 @@ export const updateOffer = `mutation UpdateOffer($input: UpdateOfferInput!) {
     status
   }
 }
-`;
+`
 export const deleteOffer = `mutation DeleteOffer($input: DeleteOfferInput!) {
   deleteOffer(input: $input) {
     id
@@ -177,4 +177,4 @@ export const deleteOffer = `mutation DeleteOffer($input: DeleteOfferInput!) {
     status
   }
 }
-`;
+`

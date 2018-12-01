@@ -27,9 +27,7 @@
 
             <template slot="detail" slot-scope="props">
                 <article class="media">
-                    <figure v-if="props.row.image" class="media-left image is-64x64">
-                        <img :src="`${url}/64x64/public/${props.row.image}`">
-                    </figure>
+                    <figure v-if="props.row.image" :style="`background: center / cover url(${url}/64x64/public/${props.row.image}) white`" class="image is-64x64 media-left"></figure>
                     <div class="media-content">
                         <div class="content">
                             <p v-if="props.row.content">{{ props.row.content.substring(0, 101) }} <span v-if="props.row.content.lenght > 100">...</span></p>

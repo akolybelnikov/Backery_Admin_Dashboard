@@ -140,7 +140,7 @@ export const getOffer = `query GetOffer($id: ID!, $status: String!) {
     status
   }
 }
-`;
+`
 export const listOffers = `query ListOffers(
   $filter: TableOfferFilterInput
   $limit: Int
@@ -156,4 +156,4 @@ export const listOffers = `query ListOffers(
     nextToken
   }
 }
-`;
+`
