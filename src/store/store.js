@@ -1,5 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {
+    getCategories,
+    getFillings,
+    getNews,
+    getOffers,
+    getProducts
+} from './services/queries'
 
 Vue.use(Vuex)
 
@@ -121,17 +128,54 @@ const store = new Vuex.Store({
             state.fillings.splice(index, 1)
         }
     },
+    actions: {
+        GET_CATEGORIES: async ({ commit }) => {
+            commit({
+                type: 'setCategories',
+                items: await getCategories()
+            })
+        },
+        GET_FILLINGS: async ({ commit }) => {
+            commit({
+                type: 'setFillings',
+                items: await getFillings()
+            })
+        },
+        GET_OFFERS: async ({ commit }) => {
+            commit({
+                type: 'setOffers',
+                items: await getOffers()
+            })
+        },
+        GET_NEWS: async ({ commit }) => {
+            commit({
+                type: 'setNews',
+                items: await getNews()
+            })
+        },
+        GET_PRODUCTS: async ({ dispatch, commit, state }) => {
+            await dispatch('GET_CATEGORIES')
+            state.categories.forEach(async category => {
+                commit({
+                    type: 'setProducts',
+                    category: category.name,
+                    items: await getProducts(category.name)
+                })
+            })
+        }
+    },
     getters: {
         getUser: state => state.user,
         getProductsByCategory: state => category => {
-            return state.products.filter(
-                product => product.category === category
-            )
+            return state.products[category]
         },
-        getCategories: state => state.categories,
-        getOffers: state => state.offers,
-        getNews: state => state.news,
-        getFillings: state => state.fillings
+        getProductById: state => (id, category) => {
+            if (state.products[category]) {
+                return state.products[category].find(
+                    product => product.productId === id
+                )
+            }
+        }
     }
 })
 

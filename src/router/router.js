@@ -67,7 +67,7 @@ const router = new Router({
                     }
                 },
                 {
-                    path: 'update-product/:id',
+                    path: 'update-product/:category/:id',
                     name: 'UpdateProduct',
                     component: ProductForm,
                     meta: {

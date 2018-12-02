@@ -7,17 +7,6 @@ const GetFilling = `query GetFilling($name: String!) {
     }
   }
   `
-const ListFillings = `query ListFillings {
-    listFillings {
-      items {
-        name
-        label
-        image
-        attachment
-      }
-    }
-  }
-  `
 const CreateFilling = `mutation CreateFilling($input: CreateFillingInput!) {
     createFilling(input: $input) {
         name
@@ -43,4 +32,4 @@ const DeleteFilling = `mutation DeleteFilling($input: DeleteFillingInput!) {
   }
   `
 
-export { GetFilling, ListFillings, CreateFilling, UpdateFilling, DeleteFilling }
+export { GetFilling, CreateFilling, UpdateFilling, DeleteFilling }

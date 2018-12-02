@@ -1,8 +1,20 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateProduct = `subscription OnCreateProduct($productId: String, $category: String) {
-  onCreateProduct(productId: $productId, category: $category) {
+export const onCreateProduct = `subscription OnCreateProduct(
+  $productId: String
+  $category: String
+  $attachment: String
+  $image: String
+  $weight: String
+) {
+  onCreateProduct(
+    productId: $productId
+    category: $category
+    attachment: $attachment
+    image: $image
+    weight: $weight
+  ) {
     productId
     category
     attachment
@@ -21,8 +33,20 @@ export const onCreateProduct = `subscription OnCreateProduct($productId: String,
   }
 }
 `;
-export const onUpdateProduct = `subscription OnUpdateProduct($productId: String, $category: String) {
-  onUpdateProduct(productId: $productId, category: $category) {
+export const onUpdateProduct = `subscription OnUpdateProduct(
+  $productId: String
+  $category: String
+  $attachment: String
+  $image: String
+  $weight: String
+) {
+  onUpdateProduct(
+    productId: $productId
+    category: $category
+    attachment: $attachment
+    image: $image
+    weight: $weight
+  ) {
     productId
     category
     attachment
@@ -41,8 +65,20 @@ export const onUpdateProduct = `subscription OnUpdateProduct($productId: String,
   }
 }
 `;
-export const onDeleteProduct = `subscription OnDeleteProduct($productId: String) {
-  onDeleteProduct(productId: $productId) {
+export const onDeleteProduct = `subscription OnDeleteProduct(
+  $productId: String
+  $category: String
+  $attachment: String
+  $image: String
+  $weight: String
+) {
+  onDeleteProduct(
+    productId: $productId
+    category: $category
+    attachment: $attachment
+    image: $image
+    weight: $weight
+  ) {
     productId
     category
     attachment
@@ -61,150 +97,261 @@ export const onDeleteProduct = `subscription OnDeleteProduct($productId: String)
   }
 }
 `;
-export const onCreateProductsTable = `subscription OnCreateProductsTable($category: String, $productId: String) {
-  onCreateProductsTable(category: $category, productId: $productId) {
-    category
-    productId
-  }
-}
-`;
-export const onUpdateProductsTable = `subscription OnUpdateProductsTable($category: String, $productId: String) {
-  onUpdateProductsTable(category: $category, productId: $productId) {
-    category
-    productId
-  }
-}
-`;
-export const onDeleteProductsTable = `subscription OnDeleteProductsTable($category: String, $productId: String) {
-  onDeleteProductsTable(category: $category, productId: $productId) {
-    category
-    productId
-  }
-}
-`;
-export const onCreateCategory = `subscription OnCreateCategory($title: String) {
-  onCreateCategory(title: $title) {
-    title
+export const onCreateCategory = `subscription OnCreateCategory(
+  $name: String
+  $image: String
+  $status: String
+  $title: String
+  $attachment: String
+) {
+  onCreateCategory(
+    name: $name
+    image: $image
+    status: $status
+    title: $title
+    attachment: $attachment
+  ) {
     name
     image
+    status
+    title
+    attachment
   }
 }
 `;
-export const onUpdateCategory = `subscription OnUpdateCategory($title: String) {
-  onUpdateCategory(title: $title) {
-    title
+export const onUpdateCategory = `subscription OnUpdateCategory(
+  $name: String
+  $image: String
+  $status: String
+  $title: String
+  $attachment: String
+) {
+  onUpdateCategory(
+    name: $name
+    image: $image
+    status: $status
+    title: $title
+    attachment: $attachment
+  ) {
     name
     image
+    status
+    title
+    attachment
   }
 }
 `;
-export const onDeleteCategory = `subscription OnDeleteCategory($title: String) {
-  onDeleteCategory(title: $title) {
-    title
+export const onDeleteCategory = `subscription OnDeleteCategory(
+  $name: String
+  $image: String
+  $status: String
+  $title: String
+  $attachment: String
+) {
+  onDeleteCategory(
+    name: $name
+    image: $image
+    status: $status
+    title: $title
+    attachment: $attachment
+  ) {
     name
     image
-  }
-}
-`;
-export const onCreateFilling = `subscription OnCreateFilling($title: String) {
-  onCreateFilling(title: $title) {
+    status
     title
-  }
-}
-`;
-export const onUpdateFilling = `subscription OnUpdateFilling($title: String) {
-  onUpdateFilling(title: $title) {
-    title
-  }
-}
-`;
-export const onDeleteFilling = `subscription OnDeleteFilling($title: String) {
-  onDeleteFilling(title: $title) {
-    title
+    attachment
   }
 }
 `;
 export const onCreateNews = `subscription OnCreateNews(
-  $id: ID
-  $content: String
+  $id: String
+  $attachment: String
+  $createdAt: String
   $image: String
   $status: String
 ) {
-  onCreateNews(id: $id, content: $content, image: $image, status: $status) {
+  onCreateNews(
+    id: $id
+    attachment: $attachment
+    createdAt: $createdAt
+    image: $image
+    status: $status
+  ) {
     id
-    content
+    attachment
+    createdAt
     image
     status
+    content
   }
 }
 `;
 export const onUpdateNews = `subscription OnUpdateNews(
-  $id: ID
-  $content: String
+  $id: String
+  $attachment: String
+  $createdAt: String
   $image: String
   $status: String
 ) {
-  onUpdateNews(id: $id, content: $content, image: $image, status: $status) {
+  onUpdateNews(
+    id: $id
+    attachment: $attachment
+    createdAt: $createdAt
+    image: $image
+    status: $status
+  ) {
     id
-    content
+    attachment
+    createdAt
     image
     status
+    content
   }
 }
 `;
 export const onDeleteNews = `subscription OnDeleteNews(
-  $id: ID
-  $content: String
+  $id: String
+  $attachment: String
+  $createdAt: String
   $image: String
   $status: String
 ) {
-  onDeleteNews(id: $id, content: $content, image: $image, status: $status) {
+  onDeleteNews(
+    id: $id
+    attachment: $attachment
+    createdAt: $createdAt
+    image: $image
+    status: $status
+  ) {
     id
-    content
+    attachment
+    createdAt
     image
     status
+    content
+  }
+}
+`;
+export const onCreateFilling = `subscription OnCreateFilling(
+  $name: String
+  $label: String
+  $image: String
+  $attachment: String
+) {
+  onCreateFilling(
+    name: $name
+    label: $label
+    image: $image
+    attachment: $attachment
+  ) {
+    name
+    label
+    image
+    attachment
+  }
+}
+`;
+export const onUpdateFilling = `subscription OnUpdateFilling(
+  $name: String
+  $label: String
+  $image: String
+  $attachment: String
+) {
+  onUpdateFilling(
+    name: $name
+    label: $label
+    image: $image
+    attachment: $attachment
+  ) {
+    name
+    label
+    image
+    attachment
+  }
+}
+`;
+export const onDeleteFilling = `subscription OnDeleteFilling(
+  $name: String
+  $label: String
+  $image: String
+  $attachment: String
+) {
+  onDeleteFilling(
+    name: $name
+    label: $label
+    image: $image
+    attachment: $attachment
+  ) {
+    name
+    label
+    image
+    attachment
   }
 }
 `;
 export const onCreateOffer = `subscription OnCreateOffer(
   $id: ID
+  $status: String
   $content: String
   $image: String
-  $status: String
+  $attachment: String
 ) {
-  onCreateOffer(id: $id, content: $content, image: $image, status: $status) {
+  onCreateOffer(
+    id: $id
+    status: $status
+    content: $content
+    image: $image
+    attachment: $attachment
+  ) {
     id
+    status
     content
     image
-    status
+    attachment
   }
 }
 `;
 export const onUpdateOffer = `subscription OnUpdateOffer(
   $id: ID
+  $status: String
   $content: String
   $image: String
-  $status: String
+  $attachment: String
 ) {
-  onUpdateOffer(id: $id, content: $content, image: $image, status: $status) {
+  onUpdateOffer(
+    id: $id
+    status: $status
+    content: $content
+    image: $image
+    attachment: $attachment
+  ) {
     id
+    status
     content
     image
-    status
+    attachment
   }
 }
 `;
 export const onDeleteOffer = `subscription OnDeleteOffer(
   $id: ID
+  $status: String
   $content: String
   $image: String
-  $status: String
+  $attachment: String
 ) {
-  onDeleteOffer(id: $id, content: $content, image: $image, status: $status) {
+  onDeleteOffer(
+    id: $id
+    status: $status
+    content: $content
+    image: $image
+    attachment: $attachment
+  ) {
     id
+    status
     content
     image
-    status
+    attachment
   }
 }
 `;

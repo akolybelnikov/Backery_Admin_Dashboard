@@ -1,4 +1,4 @@
-const GetProduct = `query GetProduct($productId: String!, $category: String!) {
+const GetProduct = `query GetProduct($productId: ID!, $category: String!) {
   getProduct(productId: $productId, category: $category) {
     productId
     category

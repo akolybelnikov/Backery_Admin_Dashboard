@@ -39,39 +39,18 @@
 </template>
 
 <script>
-import { ListCategories } from '../graphql'
+import { mapState } from 'vuex'
 
 export default {
     name: 'Categories',
     data() {
         return {
-            categories: [],
             logger: {},
-            actions: {
-                list: ListCategories
-            },
             url: process.env.VUE_APP_IMAGE_HANDLER_URL
         }
     },
-    created() {
-        this.logger = new this.$Amplify.Logger('Categories_component')
-        this.listCategories()
-    },
-    methods: {
-        async listCategories() {
-            try {
-                const response = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.actions.list, {})
-                )
-                this.categories = response.data.listCategories.items
-                this.$store.commit({
-                    type: 'setCategories',
-                    items: response.data.listCategories.items
-                })
-            } catch (err) {
-                this.logger.error(`Error listing categories: `, err)
-            }
-        }
+    computed: {
+        ...mapState(['categories'])
     }
 }
 </script>

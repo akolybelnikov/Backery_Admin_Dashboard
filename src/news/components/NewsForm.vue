@@ -236,7 +236,6 @@ export default {
             }
         },
         createNews: async function() {
-            this.formData.id = this.$uuid.v4()
             this.formData.createdAt = Date.now()
             this.loading = true
             if (this.file) {

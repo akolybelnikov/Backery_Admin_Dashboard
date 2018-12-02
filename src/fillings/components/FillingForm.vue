@@ -3,7 +3,7 @@
     <div class="column is-half columns is-multiline">
       <div class="column is-full">
         <form>
-          <b-field
+          <b-field v-if="currentRoute !== 'UpdateFilling'"
             label="Описание начинки одним английским словом"
             :type="errors.name && errors.name.length ? 'is-danger' : formData.name ? 'is-success' : ''"
             :message="errors.name"
@@ -167,7 +167,6 @@ export default {
         },
         setData: function(data) {
             this.formData = setFormData(this.formData, data)
-            console.log(this.formData, data)
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
@@ -217,6 +216,7 @@ export default {
         pushToDB: async function() {
             try {
                 const filling = makeModel(this.formData)
+                filling.name = filling.name.trim().replace(' ', '-') 
                 this.currentFilling = filling
                 const result =
                     this.currentRoute === 'FillingForm'

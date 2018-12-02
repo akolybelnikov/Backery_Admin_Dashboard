@@ -8,23 +8,6 @@ const GetOffer = `query GetOffer($id: ID!) {
     }
   }
   `
-const ListOffers = `query ListOffers(
-    $filter: TableOfferFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listOffers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        content
-        image
-        status
-        attachment
-      }
-      nextToken
-    }
-  }
-  `
 const CreateOffer = `mutation CreateOffer($input: CreateOfferInput!) {
     createOffer(input: $input) {
         content
@@ -50,4 +33,4 @@ const DeleteOffer = `mutation DeleteOffer($input: DeleteOfferInput!) {
     }
   }
   `
-export { GetOffer, ListOffers, CreateOffer, UpdateOffer, DeleteOffer }
+export { GetOffer, CreateOffer, UpdateOffer, DeleteOffer }

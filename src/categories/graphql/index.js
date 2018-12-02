@@ -8,18 +8,6 @@ const GetCategory = `query GetCategory($name: String!) {
     }
   }
   `
-const ListCategories = `query ListCategories {
-    listCategories {
-      items {
-        name
-        image
-        status
-        title
-        attachment
-      }
-    }
-  }
-  `
 const CreateCategory = `mutation CreateCategory($input: CreateCategoryInput!) {
     createCategory(input: $input) {
         name
@@ -46,10 +34,4 @@ const DeleteCategory = `mutation DeleteCategory($input: DeleteCategoryInput!) {
     }
   }
   `
-export {
-    GetCategory,
-    ListCategories,
-    CreateCategory,
-    UpdateCategory,
-    DeleteCategory
-}
+export { GetCategory, CreateCategory, UpdateCategory, DeleteCategory }

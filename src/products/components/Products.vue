@@ -15,8 +15,8 @@
                 </div>
             </div>
             <p class="panel-tabs is-size-4-tablet">
-                <router-link v-for="category in categories" :key="category.value" :to="{name: 'ProductsCategory', params: {category: category.value}}">
-                    {{ category.label }}
+                <router-link v-for="category in categories" :key="category.name" :to="{name: 'ProductsCategory', params: {category: category.name}}">
+                    {{ category.title }}
                 </router-link>
             </p>
         </nav>
@@ -25,28 +25,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
     name: 'Products',
-    data() {
-        return {
-            categories: [
-                {
-                    value: 'bread',
-                    label: 'Хлеб'
-                },
-                {
-                    value: 'cakes',
-                    label: 'Кондитерка'
-                },
-                {
-                    value: 'order',
-                    label: 'На заказ'
-                }
-            ]
-        }
-    },
-    created() {
-        this.logger = new this.$Amplify.Logger('PRODUCTS_component')
+    computed: {
+        ...mapState(['categories'])
     }
 }
 </script>

@@ -4,11 +4,9 @@ import router from './router/router'
 import store from './store/store'
 import './registerServiceWorker'
 import Amplify from 'aws-amplify'
-import UUID from 'vue-uuid'
 import Buefy from 'buefy'
 
 Vue.use(Buefy)
-Vue.use(UUID)
 Vue.use(require('vue-moment'))
 
 Amplify.configure({
