@@ -120,6 +120,13 @@ export default {
                     status: ''
                 }
             }
+            if (this.$route.name === 'UpdateCategory') {
+                this.currentCategory
+                    ? this.setData(this.currentCategory)
+                    : this.$router.push({
+                          name: 'CategoriesList'
+                      })
+            }
         }
     },
     data() {
@@ -138,7 +145,6 @@ export default {
                 name: []
             },
             notification: false,
-            currentCategory: null,
             mutations: {
                 create: CreateCategory,
                 update: UpdateCategory,
@@ -154,33 +160,24 @@ export default {
     computed: {
         currentRoute() {
             return this.$route.name
+        },
+        currentCategory() {
+            return this.$store.getters.getCategoryByName(
+                this.$route.params.name
+            )
         }
     },
     created() {
         this.logger = new this.$Amplify.Logger('Category_form')
         if (this.$route.name === 'UpdateCategory') {
-            this.fetchCategory()
+            this.currentCategory
+                ? this.setData(this.currentCategory)
+                : this.$router.push({
+                      name: 'CategoriesList'
+                  })
         }
     },
     methods: {
-        fetchCategory: async function() {
-            this.error = false
-            this.currentCategory = null
-            try {
-                const result = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.actions.get, {
-                        name: this.$route.params.name
-                    })
-                )
-                result.data.getCategory
-                    ? this.setData(result.data.getCategory)
-                    : this.$router.push({
-                          name: 'Categories'
-                      })
-            } catch (err) {
-                this.error = true
-            }
-        },
         setData: function(data) {
             this.formData = setFormData(this.formData, data)
             if (this.formData.image) {

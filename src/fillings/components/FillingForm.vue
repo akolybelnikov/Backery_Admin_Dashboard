@@ -3,7 +3,8 @@
     <div class="column is-half columns is-multiline">
       <div class="column is-full">
         <form>
-          <b-field v-if="currentRoute !== 'UpdateFilling'"
+          <b-field
+            v-if="currentRoute !== 'UpdateFilling'"
             label="Описание начинки одним английским словом"
             :type="errors.name && errors.name.length ? 'is-danger' : formData.name ? 'is-success' : ''"
             :message="errors.name"
@@ -89,7 +90,6 @@ import { makeModel, setFormData } from '../../helpers/model'
 import Preview from '../../components/Preview'
 import {
     CreateFilling,
-    GetFilling,
     UpdateFilling,
     DeleteFilling
 } from '../graphql'
@@ -100,13 +100,20 @@ export default {
     watch: {
         $route() {
             if (this.$route.name === 'FillingForm') {
-                this.src = this.currentFilling = null
+                this.src = null
                 this.formData = {
                     name: '',
                     label: '',
                     attachment: '',
                     image: ''
                 }
+            }
+            if (this.$route.name === 'UpdateFilling') {
+                this.currentFilling
+                    ? this.setData(this.currentFilling)
+                    : this.$router.push({
+                          name: 'FillingsList'
+                      })
             }
         }
     },
@@ -125,14 +132,10 @@ export default {
                 name: []
             },
             notification: false,
-            currentFilling: null,
             mutations: {
                 create: CreateFilling,
                 update: UpdateFilling,
                 delete: DeleteFilling
-            },
-            queries: {
-                get: GetFilling
             },
             loading: false
         }
@@ -140,31 +143,22 @@ export default {
     computed: {
         currentRoute() {
             return this.$route.name
+        },
+        currentFilling() {
+            return this.$store.getters.getFillingByName(this.$route.params.name)
         }
     },
     created() {
         this.logger = new this.$Amplify.Logger('Filling_form')
         if (this.$route.name === 'UpdateFilling') {
-            this.fetchFilling()
+            this.currentFilling
+                ? this.setData(this.currentFilling)
+                : this.$router.push({
+                      name: 'FillingsList'
+                  })
         }
     },
     methods: {
-        fetchFilling: async function() {
-            if (this.currentFilling) this.currentFilling = null
-            try {
-                const result = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.queries.get, {
-                        name: this.$route.params.name
-                    })
-                )
-                if (result.data.getFilling) {
-                    this.setData(result.data.getFilling)
-                }
-            } catch (err) {
-                console.error(err)
-                this.$router.push({ name: 'Fillings' })
-            }
-        },
         setData: function(data) {
             this.formData = setFormData(this.formData, data)
             if (this.formData.image) {
@@ -216,8 +210,7 @@ export default {
         pushToDB: async function() {
             try {
                 const filling = makeModel(this.formData)
-                filling.name = filling.name.trim().replace(' ', '-') 
-                this.currentFilling = filling
+                filling.name = filling.name.trim().replace(' ', '-')
                 const result =
                     this.currentRoute === 'FillingForm'
                         ? await this.$Amplify.API.graphql(
@@ -237,7 +230,6 @@ export default {
                               )
                           )
                 if (result.data.createFilling || result.data.updateFilling) {
-                    this.currentFilling = null
                     result.data.createFilling
                         ? this.$store.commit({
                               type: 'addFilling',
@@ -300,7 +292,6 @@ export default {
                     })
                 )
                 if (result.data.deleteFilling) {
-                    this.currentFilling = null
                     if (this.file) {
                         this.file = null
                     }

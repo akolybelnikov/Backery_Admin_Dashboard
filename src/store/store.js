@@ -175,6 +175,26 @@ const store = new Vuex.Store({
                     product => product.productId === id
                 )
             }
+        },
+        getNewsById: state => id => {
+            if (state.news) {
+                return state.news.find(item => item.id === id)
+            }
+        },
+        getOfferById: state => id => {
+            if (state.offers) {
+                return state.offers.find(item => item.id === id)
+            }
+        },
+        getCategoryByName: state => name => {
+            if (state.categories) {
+                return state.categories.find(item => item.name === name)
+            }
+        },
+        getFillingByName: state => name => {
+            if (state.fillings) {
+                return state.fillings.find(item => item.name === name)
+            }
         }
     }
 })

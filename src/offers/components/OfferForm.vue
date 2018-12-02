@@ -89,7 +89,7 @@
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import { makeModel, setFormData } from '../../helpers/model'
 import Preview from '../../components/Preview'
-import { CreateOffer, GetOffer, UpdateOffer, DeleteOffer } from '../graphql'
+import { CreateOffer, UpdateOffer, DeleteOffer } from '../graphql'
 
 export default {
     name: 'OfferForm',
@@ -97,7 +97,7 @@ export default {
     watch: {
         $route() {
             if (this.$route.name === 'OfferForm') {
-                this.src = this.currentOffer = null
+                this.src = null
                 this.formData = {
                     id: '',
                     content: '',
@@ -106,6 +106,13 @@ export default {
                     status: '',
                     createdAt: ''
                 }
+            }
+            if (this.$route.name === 'UpdateOffer') {
+                this.currentOffer
+                    ? this.setData(this.currentOffer)
+                    : this.$router.push({
+                          name: 'OffersList'
+                      })
             }
         }
     },
@@ -122,14 +129,10 @@ export default {
             file: null,
             src: null,
             notification: false,
-            currentOffer: null,
             mutations: {
                 create: CreateOffer,
                 update: UpdateOffer,
                 delete: DeleteOffer
-            },
-            queries: {
-                get: GetOffer
             },
             loading: false
         }
@@ -137,28 +140,22 @@ export default {
     computed: {
         currentRoute() {
             return this.$route.name
+        },
+        currentOffer() {
+            return this.$store.getters.getOfferById(this.$route.params.id)
         }
     },
     created() {
         this.logger = new this.$Amplify.Logger('Offer_form')
         if (this.$route.name === 'UpdateOffer') {
-            this.fetchOffer()
+            this.currentOffer
+                ? this.setData(this.currentOffer)
+                : this.$router.push({
+                      name: 'OffersList'
+                  })
         }
     },
     methods: {
-        fetchOffer: async function() {
-            try {
-                const result = await this.$Amplify.API.graphql(
-                    this.$Amplify.graphqlOperation(this.queries.get, {
-                        id: this.$route.params.id
-                    })
-                )
-                this.setData(result.data.getOffer)
-            } catch (err) {
-                console.error(err)
-                this.$router.push({ name: 'OffersList' })
-            }
-        },
         setData: function(data) {
             this.formData = setFormData(this.formData, data)
             if (this.formData.image) {
@@ -201,7 +198,6 @@ export default {
         pushToDB: async function() {
             try {
                 const offer = makeModel(this.formData)
-                this.currentOffer = offer
                 const result =
                     this.currentRoute === 'OfferForm'
                         ? await this.$Amplify.API.graphql(
@@ -224,15 +220,14 @@ export default {
                     result.data.createOffer
                         ? this.$store.commit({
                               type: 'addOffer',
-                              item: this.currentOffer
+                              item: result.data.createOffer
                           })
                         : this.$store.commit({
                               type: 'updateOffer',
-                              item: this.currentOffer
+                              item: result.data.updateOffer
                           })
                     if (this.file) this.file = null
                     if (this.src) this.src = null
-                    this.currentOffer = null
                     this.$router.push({
                         name: 'Created',
                         params: {
@@ -281,7 +276,6 @@ export default {
                     })
                 )
                 if (result.data.deleteOffer) {
-                    this.currentOffer = null
                     if (this.file) {
                         this.file = null
                     }
