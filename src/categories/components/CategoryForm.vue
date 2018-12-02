@@ -111,7 +111,7 @@ export default {
     watch: {
         $route() {
             if (this.$route.name === 'CategoryForm') {
-                this.src = this.currentCategory = null
+                this.src = null
                 this.formData = {
                     name: '',
                     title: '',
@@ -153,7 +153,6 @@ export default {
             actions: {
                 get: GetCategory
             },
-            error: false,
             loading: false
         }
     },
@@ -183,7 +182,7 @@ export default {
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
-                }/450x450/public/${data.image}`
+                }/128x128/public/${data.image}`
             }
         },
         checkForm: function(action) {
@@ -228,12 +227,12 @@ export default {
                 }/${key}`
             } catch (err) {
                 this.loading = false
+                console.error(err)
             }
         },
         pushToDB: async function() {
             try {
                 const category = makeModel(this.formData)
-                this.currentCategory = category
                 const result =
                     this.currentRoute === 'CategoryForm'
                         ? await this.$Amplify.API.graphql(
@@ -253,7 +252,6 @@ export default {
                               )
                           )
                 if (result.data.createCategory || result.data.updateCategory) {
-                    this.currentCategory = null
                     result.data.createCategory
                         ? this.$store.commit({
                               type: 'addCategory',
@@ -274,7 +272,7 @@ export default {
                     this.loading = false
                 }
             } catch (err) {
-                this.error = err.toString()
+                console.error(err)
                 this.loading = false
             }
         },
@@ -298,8 +296,8 @@ export default {
                     await this.pushToDB()
                 }
             } catch (err) {
-                this.error = true
                 this.loading = false
+                console.error(err)
             }
         },
         deleteCategory: async function() {
@@ -317,7 +315,6 @@ export default {
                 )
                 this.loading = false
                 if (result.data.deleteCategory) {
-                    this.currentCategory = null
                     if (this.file) {
                         this.file = null
                     }
@@ -336,8 +333,8 @@ export default {
                     })
                 }
             } catch (err) {
-                this.error = true
                 this.loading = false
+                console.error(err)
             }
         }
     }

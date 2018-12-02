@@ -43,7 +43,7 @@
       <div class="columns is-multiline">
         <div class="column is-full">
           <b-field label="Предварительный просмотр">
-            <preview :title="formData.label" :category="false" :src="src"></preview>
+            <preview :title="formData.label" :filling="true" :src="src"></preview>
           </b-field>
           <div class="field">
             <div class="control">
@@ -88,11 +88,7 @@
 import { s3Upload, s3Delete } from '../../helpers/aws'
 import { makeModel, setFormData } from '../../helpers/model'
 import Preview from '../../components/Preview'
-import {
-    CreateFilling,
-    UpdateFilling,
-    DeleteFilling
-} from '../graphql'
+import { CreateFilling, UpdateFilling, DeleteFilling } from '../graphql'
 
 export default {
     name: 'FillingForm',
@@ -164,7 +160,7 @@ export default {
             if (this.formData.image) {
                 this.src = `${
                     process.env.VUE_APP_IMAGE_HANDLER_URL
-                }/450x450/public/${data.image}`
+                }/128x128/public/${data.image}`
             }
         },
         checkForm: function() {

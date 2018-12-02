@@ -1,41 +1,40 @@
 <template>
-    <div v-if="categories.length">
-        <b-table
-            :data="categories"
-            :default-sort-direction="'desc'"
-            default-sort="name"
-            detailed
-        >
-            <template slot-scope="props">
-                <b-table-column field="title" label="Название" sortable>
-                    {{ props.row.title }}
-                </b-table-column>
-                <b-table-column field="status" label="Статус" sortable centered>
-                    {{ props.row.status }}
-                </b-table-column>
-            </template>
-
-            <template slot="detail" slot-scope="props">
-                <article class="media">
-                    <figure v-if="props.row.image" :style="`background: center / cover url(${url}/64x64/public/${props.row.image}) white`" class="image is-64x64 media-left"></figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <p v-if="props.row.title">{{ props.row.title }}</p>
-                        </div>
-                    </div>
-                    <div class="media-right">
-                        <router-link class="button is-primary" :to="{name: 'UpdateCategory', params: {name: props.row.name}}">
-                            <span class="icon">
-                            <i class="mdi mdi-chevron-right"></i>
-                            </span>
-                        </router-link>
-                    </div>
-                </article>
-            </template>
-
-        </b-table>
-    </div>
-    <div v-else>Категорий нет</div>
+  <div v-if="categories.length">
+    <b-table :data="categories" :default-sort-direction="'desc'" default-sort="name">
+      <template slot-scope="props">
+        <b-table-column field="image" label="Изображение">
+          <figure
+            v-if="props.row.image"
+            :style="`background: center / cover url(${url}/64x64/public/${props.row.image}) white`"
+            class="image is-64x64 media-left"
+          ></figure>
+        </b-table-column>
+        <b-table-column field="title" label="Название" sortable>
+          <span v-if="props.row.title">{{ props.row.title }}</span>
+        </b-table-column>
+        <b-table-column field="status" label="Статус" sortable centered>
+          <article class="media">
+            <div class="media-content">
+              <div class="content">
+                <span v-if="props.row.status">{{ props.row.status }}</span>
+              </div>
+            </div>
+            <div class="media-right">
+              <router-link
+                class="button is-primary"
+                :to="{name: 'UpdateCategory', params: {name: props.row.name}}"
+              >
+                <span class="icon">
+                  <i class="mdi mdi-chevron-right"></i>
+                </span>
+              </router-link>
+            </div>
+          </article>
+        </b-table-column>
+      </template>
+    </b-table>
+  </div>
+  <div v-else>Категорий нет</div>
 </template>
 
 <script>
